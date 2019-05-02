@@ -1,1 +1,5 @@
 .idea
+src/cache
+!src/cache/.keep
+mysql-data
+!mysql-data/.keep
