@@ -64,6 +64,15 @@ def fix_permissions():
     system("sudo chown -R 33 " + " ".join(files_with_write_access))
 
 
+def clear_log():
+    """
+    Delete all content from the log file.
+    :return: None
+    """
+    print("Clearing the log file...")
+    system("sudo truncate -s 0 src/log.txt; sudo chown 33 src/log.txt")
+
+
 def help_screen():
     """
     Print the help screen.
@@ -74,6 +83,7 @@ def help_screen():
     print("Use 'manage.py stop' to stop the containers of the ComicLib server.")
     print("Use 'manage.py fix-permissions' to grant writing permission on the necessary files to the web server.")
     print("Use 'manage.py check-permissions' to check writing permission on the necessary files.")
+    print("Use 'manage.py clear-log' to to clear the log file src/log.txt.")
 
 
 def prepare_config():
@@ -159,5 +169,7 @@ else:
         fix_permissions()
     elif params[0] == "check-permissions":
         print(check_permissions())
+    elif params[0] == "clear-log":
+        clear_log()
     else:
         help_screen()
