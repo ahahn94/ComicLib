@@ -10,6 +10,7 @@ services:
     - ./config/apache2/sites-enabled:/etc/apache2/sites-enabled
     - ./src/:/var/www/html
     - ./config/php/:/usr/local/etc/php/
+    - ./config.ini:/var/www/config.ini
     environment:
       AUTH_USERNAME: ${AUTH_USERNAME}
       AUTH_PASSWORD: ${AUTH_PASSWORD}
