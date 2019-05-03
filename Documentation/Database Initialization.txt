@@ -1,0 +1,1 @@
+You can find the database initialization script under src/php_includes/Database/Management/tables.sql.
