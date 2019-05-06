@@ -4,8 +4,9 @@
  * on 03.05.19
  */
 
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Configuration/Configuration.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Management/Initialization.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging/Logging.php";
 
 /**
  * Class Connection
@@ -13,9 +14,6 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging.php";
  */
 class Connection
 {
-    // Path to the file with the connection details.
-    private static $ConfigPath = "/var/www/config.ini";
-
     // Singleton connection object.
     private static $instance = null;
 
@@ -30,9 +28,10 @@ class Connection
         // Check if connection is not yet initialized.
         if (!isset(self::$instance)) {
             Logging::logInformation("Start connecting to database...");
-            $config = self::getConfig(); // Get the database connection config.
+            $config = Configuration::getConfiguration(); // Get the database connection config.
             if (!empty($config)) {
                 // If reading config was successful, continue.
+                $config = $config["Database"]; // Reduce config to database part.
                 $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION; // Make SQL-errors raise exceptions.
                 $pdo_options[PDO::MYSQL_ATTR_INIT_COMMAND] = "Set Names utf8"; // Force utf8 charset.
                 Logging::logInformation("Connecting to the database.");
@@ -53,21 +52,5 @@ class Connection
             }
         }
         return self::$instance;
-    }
-
-    /**
-     * Get the database config from the config file.
-     * @return array Array of Key->Value pairs. Empty array if error.
-     */
-    private static function getConfig()
-    {
-        Logging::logInformation("Reading configuration for connection.");
-        $config = parse_ini_file(self::$ConfigPath, true);
-        if ($config === false) {
-            // Error handling if error while reading config.
-            Logging::logError("Could not read configuration file!");
-            return array();
-        }
-        return $config["Database"];
     }
 }

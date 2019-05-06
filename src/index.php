@@ -5,7 +5,7 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Management/Connection.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging/Logging.php";
 
 // Test connecting to and initializing the database.
 $connection = Connection::getInstance();
