@@ -4,31 +4,39 @@
  * on 03.05.19
  */
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Publishers.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Volumes.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Issues.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/PublisherVolumes.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/VolumeIssues.php";
 
 /*
- * Test removing from database tables.
+ * Test reading from database views.
  */
 
-// Test database for issues.
-$issueList = array("535328", "668770", "672262", "674139");
-$issues = new Issues();
-foreach ($issueList as $issue) {
-    $issues->remove($issue);
+// Test PublisherVolumes view.
+print("PublisherVolumes getSelection<br>");
+$publisherVolumes = new PublisherVolumes();
+$volumes = $publisherVolumes->getSelection("10");
+foreach ($volumes as $volume) {
+    print($volume["Name"] . "<br>");
 }
+print("<br>");
+print("PublisherVolumes getAll<br>");
+$volumes = $publisherVolumes->getAll();
+foreach ($volumes as $volume) {
+    print($volume["Name"] . "<br>");
+}
+print("<br>");
 
-// Test database for volumes.
-$volumesList = array("110496", "91273", "111428", "111704");
-$volumes = new Volumes();
-foreach ($volumesList as $volume) {
-    $volumes->remove($volume);
+// Test VolumeIssues view.
+print("VolumeIssues getSelection<br>");
+$volumeIssues = new VolumeIssues();
+$issues = $volumeIssues->getSelection("110496");
+foreach ($issues as $issue) {
+    print($issue["IssueID"] . "<br>");
 }
-
-//// Test database for publishers.
-$publisherList = array("10", "31");
-$publishers = new Publishers();
-foreach ($publisherList as $publisher) {
-    $publishers->remove($publisher);
+print("<br>");
+print("VolumeIssues getAll<br>");
+$issues = $volumeIssues->getAll();
+foreach ($issues as $issue) {
+    print($issue["IssueID"] . "<br>");
 }
+print("<br>");
