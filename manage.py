@@ -97,7 +97,7 @@ def prepare_config():
     config = configparser.ConfigParser()
     # Preserve case of keys and values
     config.optionxform = str
-    config.read("config.ini")
+    config.read("config/ComicLib/config.ini")
     for section in config.sections():
         for (key, value) in config.items(section):
             environ[key] = value

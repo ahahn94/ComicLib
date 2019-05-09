@@ -12,7 +12,7 @@ class Configuration
 {
 
     // Path to the file with the configuration data.
-    private static $ConfigPath = "/var/www/config.ini";
+    private static $ConfigPath = "/var/www/ComicLibConfig/config.ini";
 
     // Singleton configuration object.
     private static $config = null;
@@ -21,8 +21,9 @@ class Configuration
      * Get the configuration array.
      * @return array Array with the configuration key->value pair. Empty array if error.
      */
-    public static function getConfiguration(){
-        if (!isset(self::$config)){
+    public static function getConfiguration()
+    {
+        if (!isset(self::$config)) {
             self::$config = self::readConfig();
         }
         return self::$config;
@@ -42,6 +43,15 @@ class Configuration
             return array();
         }
         return $read_config;
+    }
+
+    /*
+     * Getter functions.
+     */
+
+    public static function getConfigPath()
+    {
+        return self::$ConfigPath;
     }
 
 }
