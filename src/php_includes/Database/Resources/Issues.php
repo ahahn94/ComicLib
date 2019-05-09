@@ -17,6 +17,9 @@ class Issues implements Table
 
     private $connection = null; // Database connection.
 
+    private static $columns = array("VolumeID", "APIDetailURL", "Description", "ImageFileName", "ImageURL", "IssueLocalPath",
+        "IssueNumber", "Name", "ReadStatus"); // List of the valid columns.
+
     /**
      * Issues constructor.
      */
@@ -53,8 +56,13 @@ class Issues implements Table
      */
     public function add($dataset)
     {
-        $statement = "INSERT INTO Issues (IssueID, VolumeID, APIDetailURL, Description, ImageURL, IssueNumber, Name) " .
-            "VALUES (:IssueID, :VolumeID, :APIDetailURL, :Description, :ImageURL, :IssueNumber, :Name)";
+        // Collect list of columns to insert.
+        $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
+        $columnNames = "".join(", ", $datasetColumns);
+        $columnDataPlaceholders = ":".join(", :", $datasetColumns);
+        // Using $columnNames and $columnDataPlaceholder assures that only valid and set array fields are inserted.
+        $statement = "INSERT INTO Issues (IssueID, " . $columnNames . ") " .
+            "VALUES (:IssueID, " . $columnDataPlaceholders . ")";
         $query = $this->connection->prepare($statement);
 
         try {

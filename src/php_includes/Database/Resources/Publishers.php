@@ -17,6 +17,8 @@ class Publishers implements Table
 
     private $connection = null; // Database connection.
 
+    private static $columns = array("APIDetailURL", "Description", "ImageFileName", "ImageURL", "Name"); // List of the valid columns.
+
     /**
      * Publishers constructor.
      */
@@ -53,8 +55,13 @@ class Publishers implements Table
      */
     public function add($dataset)
     {
-        $statement = "INSERT INTO Publishers (PublisherID, APIDetailURL, Description, ImageURL, Name) " .
-            "VALUES (:PublisherID, :APIDetailURL, :Description, :ImageURL, :Name)";
+        // Collect list of columns to insert.
+        $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
+        $columnNames = "".join(", ", $datasetColumns);
+        $columnDataPlaceholders = ":".join(", :", $datasetColumns);
+        // Using $columnNames and $columnDataPlaceholder assures that only valid and set array fields are inserted.
+        $statement = "INSERT INTO Publishers ( PublisherID, ". $columnNames . ") " .
+            "VALUES (:PublisherID, " . $columnDataPlaceholders . ")";
         $query = $this->connection->prepare($statement);
 
         try {

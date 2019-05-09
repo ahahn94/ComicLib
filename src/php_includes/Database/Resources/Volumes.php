@@ -17,6 +17,9 @@ class Volumes implements Table
 
     private $connection = null; // Database connection.
 
+    private static $columns = array("PublisherID", "APIDetailURL", "Description", "ImageFileName", "ImageURL", "Name", "ReadStatus",
+        "StartYear", "VolumeLocalPath"); // List of the valid columns.
+
     /**
      * Volumes constructor.
      */
@@ -53,8 +56,13 @@ class Volumes implements Table
      */
     public function add($dataset)
     {
-        $statement = "INSERT INTO Volumes (VolumeID, PublisherID, APIDetailURL, Description, ImageURL, Name, StartYear) " .
-            "VALUES (:VolumeID, :PublisherID, :APIDetailURL, :Description, :ImageURL, :Name, :StartYear)";
+        // Collect list of columns to insert.
+        $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
+        $columnNames = "".join(", ", $datasetColumns);
+        $columnDataPlaceholders = ":".join(", :", $datasetColumns);
+        // Using $columnNames and $columnDataPlaceholder assures that only valid and set array fields are inserted.
+        $statement = "INSERT INTO Volumes (VolumeID, " . $columnNames . ") " .
+            "VALUES (:VolumeID, " . $columnDataPlaceholders . ")";
         $query = $this->connection->prepare($statement);
 
         try {
