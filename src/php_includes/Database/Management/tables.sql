@@ -1,4 +1,4 @@
-CREATE TABLE Publishers
+CREATE TABLE IF NOT EXISTS Publishers
 (
     PublisherID   VARCHAR(10) PRIMARY KEY,
     APIDetailURL  TEXT,
@@ -8,7 +8,7 @@ CREATE TABLE Publishers
     Name          TEXT
 );
 
-CREATE TABLE Volumes
+CREATE TABLE IF NOT EXISTS Volumes
 (
     VolumeID        VARCHAR(10) PRIMARY KEY,
     PublisherID     VARCHAR(10),
@@ -23,7 +23,7 @@ CREATE TABLE Volumes
     FOREIGN KEY (PublisherID) REFERENCES Publishers (PublisherID)
 );
 
-CREATE TABLE Issues
+CREATE TABLE IF NOT EXISTS Issues
 (
     IssueID         VARCHAR(10) PRIMARY KEY,
     VolumeID        VARCHAR(10),
