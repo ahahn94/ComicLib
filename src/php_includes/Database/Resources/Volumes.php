@@ -31,17 +31,31 @@ class Volumes implements Table
     /**
      * Get the dataset identified by the provided ID.
      * @param $id string ID of the dataset.
-     * @return array Dataset. Empty array if not found.
+     * @return array Dataset. Empty array if not found or error.
      */
     public function get($id)
     {
-        // TODO: Implement get() method.
+        $statement = "SELECT * FROM Volumes WHERE VolumeID = :VolumeID";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute(array("VolumeID" => $id));
+            if ($query->rowCount() != 0) {
+                return $query->fetch(PDO::FETCH_ASSOC);
+            } else return array();
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error reading Volume {VolumeID = " . $id . "} from database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
         return array();
     }
 
     /**
      * Get all datasets of the table.
-     * @return array All datasets as an array of arrays. Empty array if not found.
+     * @return array All datasets as an array of arrays. Empty array if not found or error.
      */
     public function getAll()
     {
