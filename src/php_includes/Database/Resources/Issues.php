@@ -86,8 +86,29 @@ class Issues implements Table
      */
     public function update($dataset)
     {
-        // TODO: Implement update() method.
-        return 0;
+        // Collect list of columns to update.
+        $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
+        // Turn the array into a string like "APIDetailURL = :APIDetailURL, Description = :Description", etc.
+        $dataAssignments = "" . join(", ", array_map(function ($column) {
+                return "$column = :$column";
+            }, $datasetColumns));
+
+        // Using $dataAssignments assures that only valid and set array fields are updated.
+        $statement = "UPDATE Issues SET " . $dataAssignments . " WHERE IssueID = :IssueID";
+        $query = $this->connection->prepare($statement);
+
+        try {
+            $query->execute($dataset);
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error updating Issue {IssueID = " . $dataset["IssueID"] . "} on the database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
+
+        return $query->errorCode();
     }
 
     /**

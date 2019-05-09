@@ -86,8 +86,29 @@ class Volumes implements Table
      */
     public function update($dataset)
     {
-        // TODO: Implement update() method.
-        return 0;
+        // Collect list of columns to update.
+        $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
+        // Turn the array into a string like "APIDetailURL = :APIDetailURL, Description = :Description", etc.
+        $dataAssignments = "" . join(", ", array_map(function ($column) {
+                return "$column = :$column";
+            }, $datasetColumns));
+
+        // Using $dataAssignments assures that only valid and set array fields are updated.
+        $statement = "UPDATE Volumes SET " . $dataAssignments . " WHERE VolumeID = :VolumeID";
+        $query = $this->connection->prepare($statement);
+
+        try {
+            $query->execute($dataset);
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error updating Volume {VolumeID = " . $dataset["VolumeID"] . "} on the database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
+
+        return $query->errorCode();
     }
 
     /**

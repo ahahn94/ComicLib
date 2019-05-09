@@ -57,10 +57,10 @@ class Publishers implements Table
     {
         // Collect list of columns to insert.
         $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
-        $columnNames = "".join(", ", $datasetColumns);
-        $columnDataPlaceholders = ":".join(", :", $datasetColumns);
+        $columnNames = "" . join(", ", $datasetColumns);
+        $columnDataPlaceholders = ":" . join(", :", $datasetColumns);
         // Using $columnNames and $columnDataPlaceholder assures that only valid and set array fields are inserted.
-        $statement = "INSERT INTO Publishers ( PublisherID, ". $columnNames . ") " .
+        $statement = "INSERT INTO Publishers ( PublisherID, " . $columnNames . ") " .
             "VALUES (:PublisherID, " . $columnDataPlaceholders . ")";
         $query = $this->connection->prepare($statement);
 
@@ -72,7 +72,7 @@ class Publishers implements Table
             Logging::logError($errorMessage);
             print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() ."<br>");
+            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -85,8 +85,29 @@ class Publishers implements Table
      */
     public function update($dataset)
     {
-        // TODO: Implement update() method.
-        return 0;
+        // Collect list of columns to update.
+        $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
+        // Turn the array into a string like "APIDetailURL = :APIDetailURL, Description = :Description", etc.
+        $dataAssignments = "" . join(", ", array_map(function ($column) {
+                return "$column = :$column";
+            }, $datasetColumns));
+
+        // Using $dataAssignments assures that only valid and set array fields are updated.
+        $statement = "UPDATE Publishers SET " . $dataAssignments . " WHERE PublisherID = :PublisherID";
+        $query = $this->connection->prepare($statement);
+
+        try {
+            $query->execute($dataset);
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error updating Publisher {PublisherID = " . $dataset["PublisherID"] . "} on the database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
+
+        return $query->errorCode();
     }
 
     /**
