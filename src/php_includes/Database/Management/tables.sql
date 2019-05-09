@@ -32,6 +32,7 @@ CREATE TABLE Issues
     ImageFileName   TEXT,
     ImageURL        TEXT,
     IssueLocalPath  TEXT,
+    IssueNumber     VARCHAR(10),
     Name            TEXT,
     ReadStatus      TINYINT,
     FOREIGN KEY (VolumeID) REFERENCES Volumes (VolumeID)
