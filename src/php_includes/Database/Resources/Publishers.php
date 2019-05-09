@@ -145,7 +145,18 @@ class Publishers implements Table
      */
     public function remove($id)
     {
-        // TODO: Implement remove() method.
-        return 0;
+        $statement = "DELETE FROM Publishers WHERE PublisherID = :PublisherID";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute(array("PublisherID" => $id));
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error removing Publisher {PublisherID = " . $id . "} from database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
+        return $query->errorCode();
     }
 }

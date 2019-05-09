@@ -146,7 +146,19 @@ class Issues implements Table
      */
     public function remove($id)
     {
-        // TODO: Implement remove() method.
-        return 0;
+        $statement = "DELETE FROM Issues WHERE IssueID = :IssueID";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute(array("IssueID" => $id));
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error removing Issue {IssueID = " . $id . "} from database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
+
+        return $query->errorCode();
     }
 }

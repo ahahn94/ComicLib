@@ -146,7 +146,18 @@ class Volumes implements Table
      */
     public function remove($id)
     {
-        // TODO: Implement remove() method.
-        return 0;
+        $statement = "DELETE FROM Volumes WHERE VolumeID = :VolumeID";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute(array("VolumeID" => $id));
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error removing Volume {VolumeID = " . $id . "} from database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
+        return $query->errorCode();
     }
 }

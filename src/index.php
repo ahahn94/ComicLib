@@ -9,26 +9,26 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Volum
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Issues.php";
 
 /*
- * Test reading from database tables.
+ * Test removing from database tables.
  */
 
-//// Test database for publishers.
-$publishers = new Publishers();
-$publisherDatasets = $publishers->getAll();
-foreach ($publisherDatasets as $dataset) {
-    print($dataset["Name"] . "<br>");
+// Test database for issues.
+$issueList = array("535328", "668770", "672262", "674139");
+$issues = new Issues();
+foreach ($issueList as $issue) {
+    $issues->remove($issue);
 }
 
 // Test database for volumes.
+$volumesList = array("110496", "91273", "111428", "111704");
 $volumes = new Volumes();
-$volumeDatasets = $volumes->getAll();
-foreach ($volumeDatasets as $dataset) {
-    print($dataset["Name"] . "<br>");
+foreach ($volumesList as $volume) {
+    $volumes->remove($volume);
 }
 
-// Test database for issues.
-$issues = new Issues();
-$issueDatasets = $issues->getAll();
-foreach ($issueDatasets as $dataset) {
-    print($dataset["Name"] . "<br>");
+//// Test database for publishers.
+$publisherList = array("10", "31");
+$publishers = new Publishers();
+foreach ($publisherList as $publisher) {
+    $publishers->remove($publisher);
 }
