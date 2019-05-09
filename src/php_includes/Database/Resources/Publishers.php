@@ -58,7 +58,21 @@ class Publishers implements Table
      */
     public function getAll()
     {
-        // TODO: Implement getAll() method.
+        $statement = "SELECT * FROM Publishers";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute();
+            if ($query->rowCount() != 0) {
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } else return array();
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error reading Publishers from database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
         return array();
     }
 

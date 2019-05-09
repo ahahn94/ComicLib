@@ -59,7 +59,21 @@ class Volumes implements Table
      */
     public function getAll()
     {
-        // TODO: Implement getAll() method.
+        $statement = "SELECT * FROM Volumes";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute();
+            if ($query->rowCount() != 0) {
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } else return array();
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error reading Volumes from database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
         return array();
     }
 
@@ -72,8 +86,8 @@ class Volumes implements Table
     {
         // Collect list of columns to insert.
         $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
-        $columnNames = "".join(", ", $datasetColumns);
-        $columnDataPlaceholders = ":".join(", :", $datasetColumns);
+        $columnNames = "" . join(", ", $datasetColumns);
+        $columnDataPlaceholders = ":" . join(", :", $datasetColumns);
         // Using $columnNames and $columnDataPlaceholder assures that only valid and set array fields are inserted.
         $statement = "INSERT INTO Volumes (VolumeID, " . $columnNames . ") " .
             "VALUES (:VolumeID, " . $columnDataPlaceholders . ")";
