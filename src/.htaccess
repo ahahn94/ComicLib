@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+#    Redirect everything that is not a file or directory to index.php.
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ index.php?_url=$1 [QSA,L]
+</IfModule>
