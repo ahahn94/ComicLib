@@ -83,6 +83,9 @@ class StorageManager
             }
 
         }
+
+        Logging::logInformation("Finished scanning comic storage.");
+
     }
 
     /**
@@ -92,6 +95,8 @@ class StorageManager
      */
     private function manageVolumeDirectory($volumePath, $volumeID)
     {
+
+        Logging::logInformation("Scanning $volumePath for comic files...");
 
         $volumes = new Volumes();
 
@@ -112,6 +117,8 @@ class StorageManager
                  * There are already some issues on the database. Compare to directory content.
                  */
 
+                Logging::logInformation("$volumePath is already on the database. Scanning for new files...");
+
                 // Get list of files inside $volumePath.
                 $filesInDirectory = self::getFilesList($volumePath);
 
@@ -123,14 +130,26 @@ class StorageManager
                 // Get files that are still missing on the database.
                 $filesNotOnDB = array_diff($filesInDirectory, $issueFilesList);
 
-                /*
-                 * Match $filesNotOnDB to issues.
-                 */
+                // Check if $filesNotOnDB is not empty to avoid getting the volume issues from ComicVine if not
+                // necessary.
+                if (!empty($filesNotOnDB)) {
+                    // New files found. Match them to issues from ComicVine and add them to the database.
 
-                // Get the list of issues of this volume from the ComicVine API.
-                $volumeIssuesAPI = VolumeIssue::get($volumeID);
+                    Logging::logInformation("$volumePath contains comic files that are not already on the database.");
 
-                self::matchFilesToIssues($volumeFromDB, $filesNotOnDB, $volumeIssuesAPI);
+                    /*
+                     * Match $filesNotOnDB to issues.
+                     */
+
+                    // Get the list of issues of this volume from the ComicVine API.
+                    $volumeIssuesAPI = VolumeIssue::get($volumeID);
+
+                    self::matchFilesToIssues($volumeFromDB, $filesNotOnDB, $volumeIssuesAPI);
+                    
+                } else {
+                    // All comic files of $volumePath are already on the database.
+                    Logging::logInformation("All comic files of $volumePath are already on the database.");
+                }
 
             }
         } else {
@@ -217,6 +236,7 @@ class StorageManager
      */
     private static function matchFilesToIssues($volumeFromDB, $filesToMatch, $volumeIssuesFromAPI)
     {
+        Logging::logInformation("Matching new comic files to issues from ComicVine...");
 
         $issues = new Issues();
 
@@ -271,6 +291,8 @@ class StorageManager
                     // Add to database.
                     $issues->add($issue);
 
+                    Logging::logInformation("Added $file to the database.");
+
                 } else {
                     // Issue number from file does not match any issue of the volume. Log error.
                     Logging::logError("Could not match " . $volumeFromDB["VolumeLocalPath"] . "/$file to any issue of the volume " .
@@ -282,6 +304,9 @@ class StorageManager
                 Logging::logError("No valid issue number in $file! Skipping.");
             }
         }
+
+        Logging::logInformation("Finished matching comic files for " . $volumeFromDB["VolumeLocalPath"] . ".");
+
     }
 
 }
