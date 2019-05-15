@@ -7,8 +7,9 @@
 // Path to the controller classes.
 $ControllerPath = $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers";
 // List of valid controllers. "" is the default that is used if no site is specified.
-$Controllers = array("" => "VolumesController","volumes" => "VolumesController", "volume" => "VolumeIssuesController",
-    "publishers" => "PublishersController", "publisher" => "PublisherVolumesController");
+$Controllers = array("" => "VolumesController", "volumes" => "VolumesController", "volume" => "VolumeIssuesController",
+    "publishers" => "PublishersController", "publisher" => "PublisherVolumesController", "download" =>
+        "DownloadController");
 
 /*
  * Dismantle URL into controller name, path and GET parameters.

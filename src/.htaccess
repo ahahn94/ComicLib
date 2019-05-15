@@ -1,3 +1,5 @@
+# Deny access to comics storage. Downloading comics requires a login and is handled by XSendFile.
+RedirectMatch 403 ^/storage/.*$
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 #    Redirect everything that is not a file or directory to index.php.

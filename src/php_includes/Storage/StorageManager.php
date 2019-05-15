@@ -145,7 +145,7 @@ class StorageManager
                     $volumeIssuesAPI = VolumeIssue::get($volumeID);
 
                     self::matchFilesToIssues($volumeFromDB, $filesNotOnDB, $volumeIssuesAPI);
-                    
+
                 } else {
                     // All comic files of $volumePath are already on the database.
                     Logging::logInformation("All comic files of $volumePath are already on the database.");
@@ -307,6 +307,15 @@ class StorageManager
 
         Logging::logInformation("Finished matching comic files for " . $volumeFromDB["VolumeLocalPath"] . ".");
 
+    }
+
+    /*
+     * Getters.
+     */
+
+    public static function getStoragePath(): string
+    {
+        return self::$StoragePath;
     }
 
 }
