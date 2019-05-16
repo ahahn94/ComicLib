@@ -27,7 +27,7 @@ class VolumeIssue implements APIResource
     public static function get($id)
     {
         $url = APIConfiguration::getAPIRootURL() . "volume/" . APIConfiguration::getVolumePrefix() . "$id/";
-        $result = APICall::performRequest($url, self::$Options);
+        $result = APICall::performRequest($url, self::$Options, true); // Resource is rate-limited.
         if ($result === false){
             // No result. Error was already logged in APICall. Just return an empty array.
             return array();

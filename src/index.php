@@ -41,3 +41,11 @@ if (empty($controllerClassName)) {
     $controller = new $controllerClassName($path, $getParameters);
     $controller->generateDocument();
 }
+
+/**
+ * Testing ImageCache.
+ */
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
+$imageCache = new ImageCache();
+$imageCache->updateCache();

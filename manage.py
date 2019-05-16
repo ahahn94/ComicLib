@@ -31,7 +31,7 @@ from os import system
 from sys import argv
 
 # Files that the server needs write access to.
-files_with_write_access = ["src/cache", "src/log.txt", "src/updater.lock"]
+files_with_write_access = ["src/cache", "src/cache/images", "src/log.txt", "src/updater.lock"]
 
 
 def start():
