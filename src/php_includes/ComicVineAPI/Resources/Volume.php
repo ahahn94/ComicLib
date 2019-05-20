@@ -7,6 +7,7 @@
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Resources/APIResource.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Management/APIConfiguration.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Management/APICall.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Processing/Processing.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging/Logging.php";
 
 /**
@@ -50,7 +51,7 @@ class Volume implements APIResource
             $volume["VolumeID"] = $decodedString["id"];
             $volume["PublisherID"] = $decodedString["publisher"]["id"];
             $volume["APIDetailURL"] = $decodedString["api_detail_url"];
-            $volume["Description"] = $decodedString["description"];
+            $volume["Description"] = Processing::fixURLs($decodedString["description"]);
             $volume["ImageURL"] = $decodedString["image"]["medium_url"];
             $volume["Name"] = $decodedString["name"];
             $volume["StartYear"] = $decodedString["start_year"];

@@ -7,6 +7,7 @@
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Resources/APIResource.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Management/APIConfiguration.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Management/APICall.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Processing/Processing.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging/Logging.php";
 
 /**
@@ -28,7 +29,7 @@ class Issue implements APIResource
     {
         $url = APIConfiguration::getAPIRootURL() . "issue/" . APIConfiguration::getIssuePrefix() . "$id/";
         $result = APICall::performRequest($url, self::$Options, true); // Resource is rate-limited.
-        if ($result === false){
+        if ($result === false) {
             // No result. Error was already logged in APICall. Just return an empty array.
             return array();
         }
@@ -43,20 +44,19 @@ class Issue implements APIResource
     static function convertToObject($jsonString)
     {
         $decodedString = json_decode($jsonString, true);
-        if ($decodedString["error"] == "OK"){
+        if ($decodedString["error"] == "OK") {
             // Request was successful. Continue with conversion.
             $decodedString = $decodedString["results"]; // Reduce array to only the results.
             $issue = array();
             $issue["IssueID"] = $decodedString["id"];
             $issue["VolumeID"] = $decodedString["volume"]["id"];
             $issue["APIDetailURL"] = $decodedString["api_detail_url"];
-            $issue["Description"] = $decodedString["description"];
+            $issue["Description"] = Processing::fixURLs($decodedString["description"]);
             $issue["ImageURL"] = $decodedString["image"]["medium_url"];
             $issue["IssueNumber"] = $decodedString["issue_number"];
             $issue["Name"] = $decodedString["name"];
             return $issue;
-        }
-        else {
+        } else {
             return array();
         }
     }
