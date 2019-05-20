@@ -5,6 +5,9 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/VolumeIssues.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Volumes.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
 
 /**
  * Class VolumeIssuesController
@@ -12,6 +15,11 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.p
  */
 class VolumeIssuesController implements Controller
 {
+
+    private static $CurrentPage = "volumes";    // Current page. Specifies the menu entry to highlight.
+    private static $CachePath = "";             // Path to the image cache.
+    private $volumeIssues = array();            // Issues of the volume to show in the view.
+    private $volume = array();                  // Volume to show in the view.
 
     /**
      * Controller constructor.
@@ -21,9 +29,15 @@ class VolumeIssuesController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        /*
-         * TODO: Implement preparing data for view.
-         */
+        // Prepare data for view.
+        // Get the VolumeID from path (the path should be like /volume/VolumeID, so $path[0] should contain the ID).
+        if (!empty($volumeID = $path[0])){
+            $volumeIssuesRepo = new VolumeIssues();
+            $this->volumeIssues = $volumeIssuesRepo->getSelection($volumeID);
+            $volumesRepo = new Volumes();
+            $this->volume = $volumesRepo->get($volumeID);
+            self::$CachePath = ImageCache::getImageCachePath();
+        }   // Else do nothing, generateDocument will show the "404 Not Found" view.
     }
 
     /**
@@ -32,7 +46,13 @@ class VolumeIssuesController implements Controller
      */
     function generateDocument()
     {
-        // TODO: Implement generateDocument() method.
-        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/VolumeIssuesView.php";
+        // Check if there are volumes to show.
+        if (!empty($this->volumeIssues)){
+            // $volumeIssues contains issues. Show album view of issues.
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/VolumeIssuesView.php";
+        } else {
+            // $volumeIssues does not contain issues. Show "404 Not Found" view.
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/NotFoundView.php";
+        }
     }
 }

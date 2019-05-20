@@ -10,3 +10,13 @@
 .display-4 {
     font-size: 2rem;
 }
+
+.card-img-top-stretch {
+    width: 100%;
+    height: 20vw;
+    object-fit: cover
+}
+
+.text-truncate {
+    max-height: 10rem;
+}
