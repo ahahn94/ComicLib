@@ -5,6 +5,8 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Publishers.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
 
 /**
  * Class PublishersController
@@ -12,6 +14,10 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.p
  */
 class PublishersController implements Controller
 {
+
+    private static $CurrentPage = "publishers";     // Current page. Specifies the menu entry to highlight.
+    private static $CachePath = "";                 // Path to the image cache.
+    private $publishers = array();                  // Publishers to show in the view.
 
     /**
      * Controller constructor.
@@ -21,9 +27,10 @@ class PublishersController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        /*
-         * TODO: Implement preparing data for view.
-         */
+        // Prepare data for view.
+        $publishersRepo = new Publishers();
+        $this->publishers = $publishersRepo->getAll();
+        self::$CachePath = ImageCache::getImageCachePath();
     }
 
     /**
@@ -32,7 +39,13 @@ class PublishersController implements Controller
      */
     function generateDocument()
     {
-        // TODO: Implement generateDocument() method.
-        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/PublishersView.php";
+        // Check if there are publishers to show in the view.
+        if (!empty($this->publishers)) {
+            // There are publishers to show. Send view PublishersView.
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/PublishersView.php";
+        } else {
+            // $this->volumes is empty. Show "Empty Database" view.
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/EmptyDatabaseView.php";
+        }
     }
 }
