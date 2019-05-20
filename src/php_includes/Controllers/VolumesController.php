@@ -5,6 +5,8 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/PublisherVolumes.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
 
 /**
  * Class VolumesController
@@ -12,6 +14,10 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.p
  */
 class VolumesController implements Controller
 {
+
+    private static $CurrentPage = "volumes";    // Current page. Specifies the menu entry to highlight.
+    private static $CachePath = "";             // Path to the image cache.
+    private $volumes = array();                 // Volumes to show in the view.
 
     /**
      * Controller constructor.
@@ -21,9 +27,10 @@ class VolumesController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        /*
-         * TODO: Implement preparing data for view.
-         */
+        // Prepare data for view.
+        $volumesRepo = new PublisherVolumes();
+        $this->volumes = $volumesRepo->getAll();
+        self::$CachePath = ImageCache::getImageCachePath();
     }
 
     /**
@@ -32,7 +39,13 @@ class VolumesController implements Controller
      */
     function generateDocument()
     {
-        // TODO: Implement generateDocument() method.
+        // Check if there are volumes to show in the view.
+        if (!empty($this->volumes)){
+            // There are volumes to show. Send view VolumesView.
         include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/VolumesView.php";
+        } else {
+            // $this->volumes is empty. Show "Empty Database" view.
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/EmptyDatabaseView.php";
+        }
     }
 }
