@@ -5,15 +5,17 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Updater/Updater.php";
 
 /**
- * Class NotFoundController
- * Implements the controller for the "404 - Not Found" error message.
+ * Class UpdaterStatusController
+ * Implements the controller for the updates status view.
  */
-class NotFoundController implements Controller
+class UpdaterStatusController implements Controller
 {
 
-    private static $CurrentPage = "";    // Current page. Specifies the menu entry to highlight.
+    private static $CurrentPage = "update";       // Current page. Specifies the menu entry to highlight.
+    private $updaterRunning = false;              // Current status of the Updater.
 
     /**
      * Controller constructor.
@@ -23,9 +25,8 @@ class NotFoundController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        /*
-         * Nothing to do here, since the parameters are not needed to display the error message.
-         */
+        // Get the updater status.
+        $this->updaterRunning = Updater::updaterRunning();
     }
 
     /**
@@ -34,7 +35,6 @@ class NotFoundController implements Controller
      */
     function generateDocument()
     {
-        http_response_code(404);
-        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/NotFoundView.php";
+        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/UpdaterStatusView.php";
     }
 }

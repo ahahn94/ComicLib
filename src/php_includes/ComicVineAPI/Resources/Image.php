@@ -21,13 +21,12 @@ class Image
     private static $Options = "";
 
     /**
-     * Get the image specified by $fileName.
-     * @param $fileName string Filename of the image to request.
+     * Get the image specified by $url.
+     * @param $url string URL to the image to request.
      * @return string Base64 encoded string representation of the file or empty string on error.
      */
-    public static function get($fileName)
+    public static function get($url)
     {
-        $url = APIConfiguration::getAPIRootURL() . "image/scale_medium/" . "$fileName";
         // The image resource does not define a rate limit. Using false speeds things up significantly.
         $result = APICall::performRequest($url, self::$Options, false);
         if ($result === false){

@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="/"><i class="fas fa-landmark"> ComicLib</i></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item <?php if (self::$CurrentPage == 'volumes') print 'active'; ?>">
+                <a class="nav-link" href="/volumes"><i class="fas fa-archive"> Volumes</i></a>
+            </li>
+            <li class="nav-item <?php if (self::$CurrentPage == 'publishers') print 'active'; ?>">
+                <a class="nav-link" href="/publishers"><i class="fas fa-building"> Publishers</i></a>
+            </li>
+            <li class="nav-item <?php if (self::$CurrentPage == 'update') print 'active'; ?>">
+                <a class="nav-link" href="/update"><i class="fas fa-sync-alt"> Update</i></a>
+            </li>
+            >
+        </ul>
+    </div>
+</nav>
+<div style="padding: 50px 0 0 0;">
+<!-- Spacer behind the nav-bar to avoid content hiding behind nav-bar.-->
+</div>

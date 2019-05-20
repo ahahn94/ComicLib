@@ -13,6 +13,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Resources/I
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Resources/Publisher.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Resources/Volume.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Resources/VolumeIssue.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
 
 /**
  * Class StorageManager
@@ -29,11 +30,25 @@ class StorageManager
     private static $VolumeIDFile = "volume.ini";
     private static $IssueNumberDelimiter = "#";
 
+    // Database repositories.
+    private $volumes = null;
+    private $volumeIssues = null;
+    private $publishers = null;
+    private $issues = null;
+
+    private $imageCache = null;
+
     /**
      * StorageManager constructor.
      */
     public function __construct()
     {
+        // Initialize the repos once at construction.
+        $this->volumes = new Volumes();
+        $this->volumeIssues = new VolumeIssues();
+        $this->publishers = new Publishers();
+        $this->issues = new Issues();
+        $this->imageCache = new ImageCache();
     }
 
     /**
@@ -98,10 +113,8 @@ class StorageManager
 
         Logging::logInformation("Scanning $volumePath for comic files...");
 
-        $volumes = new Volumes();
-
         // Check if volume is already on the database.
-        $volumeFromDB = $volumes->get($volumeID);
+        $volumeFromDB = $this->volumes->get($volumeID);
         if (!empty($volumeFromDB)) {
 
             /*
@@ -109,8 +122,7 @@ class StorageManager
              * Check if all issues inside this directory are already on the database.
              */
 
-            $volumeIssues = new VolumeIssues();
-            $issueList = $volumeIssues->getSelection($volumeID);
+            $issueList = $this->volumeIssues->getSelection($volumeID);
             if (!empty($issueList)) {
 
                 /*
@@ -144,7 +156,7 @@ class StorageManager
                     // Get the list of issues of this volume from the ComicVine API.
                     $volumeIssuesAPI = VolumeIssue::get($volumeID);
 
-                    self::matchFilesToIssues($volumeFromDB, $filesNotOnDB, $volumeIssuesAPI);
+                    $this->matchFilesToIssues($volumeFromDB, $filesNotOnDB, $volumeIssuesAPI);
 
                 } else {
                     // All comic files of $volumePath are already on the database.
@@ -169,13 +181,17 @@ class StorageManager
                  * Check if publisher of volume is on the database.
                  * Add to database if not.
                  */
-                $publishers = new Publishers();
-                $publisher = $publishers->get($volume["PublisherID"]);
+                $publisher = $this->publishers->get($volume["PublisherID"]);
 
                 // Publisher not found on database. Get it from the ComicVine API and add it to the database.
                 if (empty($publisher)) {
                     $publisher = Publisher::get($volume["PublisherID"]);
-                    $publishers->add($publisher);
+                    $this->publishers->add($publisher);
+
+                    /*
+                     * Update image on cache.
+                     */
+                    $this->imageCache->updatePublisherImage($publisher);
                 }
 
                 /*
@@ -187,7 +203,12 @@ class StorageManager
                 $volume["VolumeLocalPath"] = $volumePath;
 
                 // Add to database.
-                $volumes->add($volume);
+                $this->volumes->add($volume);
+
+                /*
+                * Update image on cache.
+                */
+                $this->imageCache->updateVolumeImage($volume);
 
                 /*
                  * Get issue data for the comic files inside $volumePath.
@@ -200,7 +221,7 @@ class StorageManager
                 $volumeIssuesAPI = VolumeIssue::get($volumeID);
 
                 // Match files to issues.
-                self::matchFilesToIssues($volume, $filesInDirectory, $volumeIssuesAPI);
+                $this->matchFilesToIssues($volume, $filesInDirectory, $volumeIssuesAPI);
 
             } else {
                 // Error while requesting dataset from ComicVine API. Log error.
@@ -234,11 +255,9 @@ class StorageManager
      * @param $filesToMatch array List of the files in the volumes directory that have to be matched and added to DB.
      * @param $volumeIssuesFromAPI array List of the volumes issues from the ComicVine API.
      */
-    private static function matchFilesToIssues($volumeFromDB, $filesToMatch, $volumeIssuesFromAPI)
+    private function matchFilesToIssues($volumeFromDB, $filesToMatch, $volumeIssuesFromAPI)
     {
         Logging::logInformation("Matching new comic files to issues from ComicVine...");
-
-        $issues = new Issues();
 
         // Match files to issues.
         foreach ($filesToMatch as $file) {
@@ -289,7 +308,12 @@ class StorageManager
                     $issue["ReadStatus"] = 0;
 
                     // Add to database.
-                    $issues->add($issue);
+                    $this->issues->add($issue);
+
+                    /*
+                    * Update image on cache.
+                    */
+                    $this->imageCache->updateIssueImage($issue);
 
                     Logging::logInformation("Added $file to the database.");
 

@@ -24,7 +24,8 @@ class ImageCache
     private $VolumesRepo = null;
     private $ComicVineImageRepo = null;
 
-    private static $ImageCachePath = "/var/www/html/cache/images/";
+    private static $ImageCacheAbsolutePath = "/var/www/html/cache/images/";
+    private static $ImageCachePath = "/cache/images/";
 
     /**
      * ImageCache constructor.
@@ -39,6 +40,10 @@ class ImageCache
 
     /**
      * Update cache to include every image from Issues, Publishers and Volumes.
+     * The images are already downloaded right after the dataset is added to the database.
+     * Running this function after the batch of updates to the database will make sure that
+     * images that went missing (e.g. if the user deleted the image cache but not the database)
+     * will be re-cached.
      */
     public function updateCache()
     {
@@ -74,17 +79,17 @@ class ImageCache
      * Download to cache and update database if not.
      * @param $issue array Issue of which to check and update the image.
      */
-    private function updateIssueImage($issue)
+    public function updateIssueImage($issue)
     {
         if (!$this->isCached($issue["ImageFileName"])) {
             // Image file is not cached. Add to cache.
             $extension = array_pop(explode(".", basename($issue["ImageURL"])));
             $fileName = APIConfiguration::getIssuePrefix() . $issue["IssueID"] . ".$extension";
-            Logging::logInformation(self::$ImageCachePath . "$fileName is not cached. Adding to cache...");
+            Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName is not cached. Adding to cache...");
             $addedSuccessfully = $this->addToCache($fileName, $issue["ImageURL"]);
             if ($addedSuccessfully) {
                 // File was successfully cached. Add $fileName to $issue and update database.
-                Logging::logInformation(self::$ImageCachePath . "$fileName successfully added to cache.");
+                Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName successfully added to cache.");
                 $issue["ImageFileName"] = $fileName;
                 $this->IssuesRepo->update($issue);
             } // Else error writing file. Error is already logged.
@@ -96,17 +101,17 @@ class ImageCache
      * Download to cache and update database if not.
      * @param $publisher array Publisher of which to check and update the image.
      */
-    private function updatePublisherImage($publisher)
+    public function updatePublisherImage($publisher)
     {
         if (!$this->isCached($publisher["ImageFileName"])) {
             // Image file is not cached. Add to cache.
             $extension = array_pop(explode(".", basename($publisher["ImageURL"])));
             $fileName = APIConfiguration::getPublisherPrefix() . $publisher["PublisherID"] . ".$extension";
-            Logging::logInformation(self::$ImageCachePath . "$fileName is not cached. Adding to cache...");
+            Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName is not cached. Adding to cache...");
             $addedSuccessfully = $this->addToCache($fileName, $publisher["ImageURL"]);
             if ($addedSuccessfully) {
                 // File was successfully cached. Add $fileName to $publisher and update database.
-                Logging::logInformation(self::$ImageCachePath . "$fileName successfully added to cache.");
+                Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName successfully added to cache.");
                 $publisher["ImageFileName"] = $fileName;
                 $this->PublishersRepo->update($publisher);
             } // Else error writing file. Error is already logged.
@@ -118,17 +123,17 @@ class ImageCache
      * Download to cache and update database if not.
      * @param $volume array Volume of which to check and update the image.
      */
-    private function updateVolumeImage($volume)
+    public function updateVolumeImage($volume)
     {
         if (!$this->isCached($volume["ImageFileName"])) {
             // Image file is not cached. Add to cache.
             $extension = array_pop(explode(".", basename($volume["ImageURL"])));
             $fileName = APIConfiguration::getVolumePrefix() . $volume["VolumeID"] . ".$extension";
-            Logging::logInformation(self::$ImageCachePath . "$fileName is not cached. Adding to cache...");
+            Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName is not cached. Adding to cache...");
             $addedSuccessfully = $this->addToCache($fileName, $volume["ImageURL"]);
             if ($addedSuccessfully) {
                 // File was successfully cached. Add $fileName to $volume and update database.
-                Logging::logInformation(self::$ImageCachePath . "$fileName successfully added to cache.");
+                Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName successfully added to cache.");
                 $volume["ImageFileName"] = $fileName;
                 $this->VolumesRepo->update($volume);
             } // Else error writing file. Error is already logged.
@@ -145,7 +150,7 @@ class ImageCache
         // Check if $fileName is empty (which means that the file has not been cached until now).
         if (empty($fileName)) return false;
         // Check if the file exists.
-        return is_file(self::$ImageCachePath . $fileName);
+        return is_file(self::$ImageCacheAbsolutePath . $fileName);
     }
 
     /**
@@ -156,10 +161,10 @@ class ImageCache
      */
     private function addToCache($fileName, $url)
     {
-        $imageData = $this->ComicVineImageRepo::get(basename($url));
+        $imageData = $this->ComicVineImageRepo::get($url);
         if (!empty($imageData)) {
             // Successfully received image data. Write to file.
-            $imageFile = fopen(self::$ImageCachePath . $fileName, "w+");
+            $imageFile = fopen(self::$ImageCacheAbsolutePath . $fileName, "w+");
             if ($imageFile !== false) {
                 // Successfully opened file for writing. Continue.
                 $result = fwrite($imageFile, $imageData);
@@ -169,12 +174,12 @@ class ImageCache
                     return true;
                 } else {
                     // Errors during writing of the file. Log error and return false.
-                    Logging::logError("Error writing " . self::$ImageCachePath . $fileName . "! Skipping file.");
+                    Logging::logError("Error writing " . self::$ImageCacheAbsolutePath . $fileName . "! Skipping file.");
                     return false;
                 }
             } else {
                 // Could not open file for writing. Log error and return false.
-                Logging::logError("Could not open or create " . self::$ImageCachePath . $fileName .
+                Logging::logError("Could not open or create " . self::$ImageCacheAbsolutePath . $fileName .
                     " for writing! Skipping file.");
                 return false;
             }
@@ -182,4 +187,14 @@ class ImageCache
         // No image data received. Error was already logged in ComicVineAPI/Management/APICall. Return false.
         return false;
     }
+
+    /*
+     * Getters.
+     */
+
+    public static function getImageCachePath(): string
+    {
+        return self::$ImageCachePath;
+    }
+
 }

@@ -9,7 +9,7 @@ $ControllerPath = $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers";
 // List of valid controllers. "" is the default that is used if no site is specified.
 $Controllers = array("" => "VolumesController", "volumes" => "VolumesController", "volume" => "VolumeIssuesController",
     "publishers" => "PublishersController", "publisher" => "PublisherVolumesController", "download" =>
-        "DownloadController");
+        "DownloadController", "update" => "UpdaterController", "updates" => "UpdaterStatusController");
 
 /*
  * Dismantle URL into controller name, path and GET parameters.
@@ -41,11 +41,3 @@ if (empty($controllerClassName)) {
     $controller = new $controllerClassName($path, $getParameters);
     $controller->generateDocument();
 }
-
-/**
- * Testing ImageCache.
- */
-
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
-$imageCache = new ImageCache();
-$imageCache->updateCache();
