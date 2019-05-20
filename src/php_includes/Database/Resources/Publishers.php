@@ -34,7 +34,9 @@ class Publishers implements Table
      */
     public function get($id)
     {
-        $statement = "SELECT * FROM Publishers WHERE PublisherID = :PublisherID";
+        $statement =
+            "SELECT P.*, COUNT(*) AS VolumesCount FROM Publishers P JOIN Volumes V on P.PublisherID = V.PublisherID" .
+            " WHERE P.PublisherID = :PublisherID GROUP BY P.PublisherID";
         $query = $this->connection->prepare($statement);
         try {
             $query->execute(array("PublisherID" => $id));
@@ -58,7 +60,9 @@ class Publishers implements Table
      */
     public function getAll()
     {
-        $statement = "SELECT * FROM Publishers";
+        $statement =
+            "SELECT P.*, COUNT(*) AS VolumesCount FROM Publishers P JOIN Volumes V on P.PublisherID = V.PublisherID " .
+        "GROUP BY P.PublisherID";
         $query = $this->connection->prepare($statement);
         try {
             $query->execute();

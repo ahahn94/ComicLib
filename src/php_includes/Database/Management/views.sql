@@ -19,6 +19,6 @@ FROM Publishers AS p
 ORDER BY v.Name;
 
 CREATE OR REPLACE VIEW VolumeIssues AS
-SELECT v.volumeID, v.VolumeLocalPath, i.IssueID, i.IssueLocalPath, i.IssueNumber
+SELECT v.volumeID, v.VolumeLocalPath, i.IssueID, i.Name, i.ImageFileName, i.IssueLocalPath, i.IssueNumber
 FROM Volumes AS v
          JOIN Issues as i ON v.VolumeID = i.VolumeID;
