@@ -5,6 +5,10 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/PublisherVolumes.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Publishers.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicVineAPI/Processing/Processing.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
 
 /**
  * Class PublisherVolumesController
@@ -12,6 +16,11 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.p
  */
 class PublisherVolumesController implements Controller
 {
+
+    private static $CurrentPage = "publishers";     // Current page. Specifies the menu entry to highlight.
+    private static $CachePath = "";                 // Path to the image cache.
+    private $publisherVolumes = array();            // Volumes of the publisher to show in the view.
+    private $publisher = array();                   // Publisher to show in the view.
 
     /**
      * Controller constructor.
@@ -21,9 +30,15 @@ class PublisherVolumesController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        /*
-         * TODO: Implement preparing data for view.
-         */
+        // Prepare data for view.
+        // Get the PublisherID from path (the path should be like /publisher/PublisherID, so $path[0] should contain the ID).
+        if (!empty($publisherID = $path[0])) {
+            $publisherVolumesRepo = new PublisherVolumes();
+            $this->publisherVolumes = $publisherVolumesRepo->getSelection($publisherID);
+            $publishersRepo = new Publishers();
+            $this->publisher = $publishersRepo->get($publisherID);
+            self::$CachePath = ImageCache::getImageCachePath();
+        }   // Else do nothing, generateDocument will show the "404 Not Found" view.
     }
 
     /**
@@ -32,7 +47,12 @@ class PublisherVolumesController implements Controller
      */
     function generateDocument()
     {
-        // TODO: Implement generateDocument() method.
-        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/PublisherVolumesView.php";
-    }
+        // Check if there are volumes to show.
+        if (!empty($this->publisherVolumes)){
+            // $publisherVolumes contains volumes. Show album view of volumes.
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/PublisherVolumesView.php";
+        } else {
+            // $volumeIssues does not contain issues. Show "404 Not Found" view.
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/NotFoundView.php";
+        }    }
 }
