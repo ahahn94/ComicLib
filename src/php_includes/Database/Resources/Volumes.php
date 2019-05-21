@@ -59,7 +59,7 @@ class Volumes implements Table
      */
     public function getAll()
     {
-        $statement = "SELECT * FROM Volumes";
+        $statement = "SELECT * FROM Volumes ORDER BY Name";
         $query = $this->connection->prepare($statement);
         try {
             $query->execute();

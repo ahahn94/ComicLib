@@ -33,7 +33,7 @@ class VolumeIssues implements View
      */
     public function getSelection($id)
     {
-        $statement = "SELECT * FROM VolumeIssues WHERE VolumeID = :VolumeID";
+        $statement = "SELECT * FROM VolumeIssues WHERE VolumeID = :VolumeID ORDER BY IssueNumber";
         $query = $this->connection->prepare($statement);
         try {
             $query->execute(array("VolumeID" => $id));

@@ -62,7 +62,7 @@ class Publishers implements Table
     {
         $statement =
             "SELECT P.*, COUNT(*) AS VolumesCount FROM Publishers P JOIN Volumes V on P.PublisherID = V.PublisherID " .
-        "GROUP BY P.PublisherID";
+        "GROUP BY P.PublisherID ORDER BY P.Name";
         $query = $this->connection->prepare($statement);
         try {
             $query->execute();

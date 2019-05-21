@@ -33,7 +33,7 @@ class PublisherVolumes implements View
      */
     public function getSelection($id)
     {
-        $statement = "SELECT * FROM PublisherVolumes WHERE PublisherID = :PublisherID";
+        $statement = "SELECT * FROM PublisherVolumes WHERE PublisherID = :PublisherID ORDER BY Name";
         $query = $this->connection->prepare($statement);
         try {
             $query->execute(array("PublisherID" => $id));
