@@ -32,6 +32,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
             <?php
             // Insert an album card for every volume in $this->volumes (passed from VolumesController).
             foreach ($this->volumes as $volume) {
+                if ($volume["IssueCount"] != 0){
                 ?>
 
                 <div class="col-6 col-md-4 col-lg-2 col-xl-2 card-group">
@@ -51,7 +52,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
                     </div>
                 </div>
 
-            <?php } ?>
+            <?php }} ?>
 
         </div>
     </div>

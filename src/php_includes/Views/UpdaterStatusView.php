@@ -19,8 +19,6 @@
     require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/FontAwesomeHeader.html";
     ?>
 
-    <!--    <meta http-equiv="refresh" content="10; url=/updates" />-->
-
 </header>
 <body>
 
@@ -30,7 +28,6 @@ cover; position: fixed; height: 100%; width: 100%;'>
 
     <?php
     require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
-    print_r($this->updaterRunning);
     ?>
 
     <div class="text-center text-light" style="min-height: 100%; display: flex; align-items: center" id="message">

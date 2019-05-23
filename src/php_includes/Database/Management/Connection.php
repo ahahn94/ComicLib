@@ -27,14 +27,13 @@ class Connection
     {
         // Check if connection is not yet initialized.
         if (!isset(self::$instance)) {
-            Logging::logInformation("Start connecting to database...");
+            Logging::logInformation("Connecting to database...");
             $config = Configuration::getConfiguration(); // Get the database connection config.
             if (!empty($config)) {
                 // If reading config was successful, continue.
                 $config = $config["Database"]; // Reduce config to database part.
                 $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION; // Make SQL-errors raise exceptions.
                 $pdo_options[PDO::MYSQL_ATTR_INIT_COMMAND] = "Set Names utf8"; // Force utf8 charset.
-                Logging::logInformation("Connecting to the database.");
                 try {
                     self::$instance = new PDO("mysql:host=" . $config["MYSQL_HOST"] . ";dbname=" . $config["MYSQL_DATABASE"] .
                         ";", $config["MYSQL_USER"], $config["MYSQL_PASSWORD"], $pdo_options);
