@@ -188,6 +188,20 @@ class ImageCache
         return false;
     }
 
+    /**
+     * Remove a file from the image cache.
+     * @param $dataset array Dataset to remove the image file of.
+     */
+    public function removeFromCache($dataset)
+    {
+        // Delete file.
+        if (unlink(self::$ImageCacheAbsolutePath . $dataset["ImageFileName"])) {
+            Logging::logInformation("Successfully deleted " . $dataset["ImageFileName"] . " from image cache.");
+        } else {
+            Logging::logError("Could not delete " . $dataset["ImageFileName"] . " from image cache!");
+        }
+    }
+
     /*
      * Getters.
      */
