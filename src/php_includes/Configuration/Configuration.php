@@ -35,11 +35,10 @@ class Configuration
      */
     private static function readConfig()
     {
-        Logging::logInformation("Reading configuration from " . self::$ConfigPath . ".");
         $read_config = parse_ini_file(self::$ConfigPath, true);
         if ($read_config === false) {
             // Error handling if error while reading config.
-            Logging::logError("Could not read configuration file!");
+            Logging::logError("Could not read configuration file ". self::$ConfigPath . "!");
             return array();
         }
         return $read_config;

@@ -15,10 +15,16 @@
             <li class="nav-item <?php if (self::$CurrentPage == 'update') print 'active'; ?>">
                 <a class="nav-link" href="/update"><i class="fas fa-sync-alt"> Update</i></a>
             </li>
-            >
         </ul>
+        <div class="mt-auto">
+            <form class="form-inline form-control-sm" method="post">
+                <input type="hidden" name="logout" value="true">
+                <button class="btn btn-primary btn-logout" type="submit">Sign off <i
+                        class="fas fa-sign-out-alt fa-sm"></i></button>
+            </form>
+        </div>
     </div>
 </nav>
 <div style="padding: 50px 0 0 0;">
-<!-- Spacer behind the nav-bar to avoid content hiding behind nav-bar.-->
+    <!-- Spacer behind the nav-bar to avoid content hiding behind nav-bar.-->
 </div>

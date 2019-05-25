@@ -7,14 +7,11 @@ services:
     ports:
     - "8081:80"
     volumes:
+    - ./config/php/:/usr/local/etc/php/
     - ./config/apache2/sites-enabled:/etc/apache2/sites-enabled
     - ./src/:/var/www/html
-    - ./config/php/:/usr/local/etc/php/
     - ./config/ComicLib/:/var/www/ComicLibConfig/
-    environment:
-      AUTH_USERNAME: ${AUTH_USERNAME}
-      AUTH_PASSWORD: ${AUTH_PASSWORD}
-    command: bash -c "htpasswd -Bb -c /etc/apache2/.htpasswd $${AUTH_USERNAME} $${AUTH_PASSWORD}; source /etc/apache2/envvars; apache2 -D FOREGROUND"
+    command: bash -c "source /etc/apache2/envvars; apache2 -D FOREGROUND"
   database:
     image: hypriot/rpi-mysql:5.5
     volumes:

@@ -27,7 +27,6 @@ class Connection
     {
         // Check if connection is not yet initialized.
         if (!isset(self::$instance)) {
-            Logging::logInformation("Connecting to database...");
             $config = Configuration::getConfiguration(); // Get the database connection config.
             if (!empty($config)) {
                 // If reading config was successful, continue.
@@ -37,7 +36,6 @@ class Connection
                 try {
                     self::$instance = new PDO("mysql:host=" . $config["MYSQL_HOST"] . ";dbname=" . $config["MYSQL_DATABASE"] .
                         ";", $config["MYSQL_USER"], $config["MYSQL_PASSWORD"], $pdo_options);
-                    Logging::logInformation("Connected to database.");
                     Initialization::check();
                 } catch (Exception $e) {
                     // Error handling if error while connecting to database.
