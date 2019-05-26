@@ -79,6 +79,31 @@ class Users implements Table
     }
 
     /**
+     * Get the dataset identified by the provided apiKey.
+     * @param $apiKey string APIKey field of the dataset.
+     * @return array Dataset. Empty array if not found or error.
+     */
+    public function getByAPIKey($apiKey)
+    {
+        $statement = "SELECT * FROM Users WHERE APIKey = :Name";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute(array("Name" => $apiKey));
+            if ($query->rowCount() != 0) {
+                return $query->fetch(PDO::FETCH_ASSOC);
+            } else return array();
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error reading User {APIKey = " . $apiKey . "} from database!";
+            Logging::logError($errorMessage);
+            print($errorMessage . "<br>");
+            Logging::logError($e->getMessage());
+            print($e->getMessage() . "<br>");
+        }
+        return array();
+    }
+
+    /**
      * Get all datasets of the table.
      * @return array All datasets as an array of arrays. Empty array if not found or error.
      */
