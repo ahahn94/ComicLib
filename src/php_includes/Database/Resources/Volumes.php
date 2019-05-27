@@ -17,7 +17,7 @@ class Volumes implements Table
 
     private $connection = null; // Database connection.
 
-    private static $columns = array("PublisherID", "APIDetailURL", "Description", "ImageFileName", "ImageURL", "Name", "ReadStatus",
+    private static $columns = array("PublisherID", "APIDetailURL", "Description", "ImageFileName", "ImageURL", "Name",
         "StartYear", "VolumeLocalPath"); // List of the valid columns.
 
     /**

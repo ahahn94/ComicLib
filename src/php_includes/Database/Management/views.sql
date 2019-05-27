@@ -22,3 +22,19 @@ CREATE OR REPLACE VIEW VolumeIssues AS
 SELECT v.volumeID, v.VolumeLocalPath, i.IssueID, i.Name, i.ImageFileName, i.IssueLocalPath, i.IssueNumber
 FROM Volumes AS v
          JOIN Issues as i ON v.VolumeID = i.VolumeID;
+
+CREATE or REPLACE VIEW VolumeReadStatus AS
+SELECT V.*,
+       R.UserID,
+       VC.IssueCount,
+       IF(VC.IssueCount = SUM(R.IsRead), true, false) AS IsRead
+FROM ReadStatus R
+         JOIN Issues I on R.IssueID = I.IssueID
+         JOIN Volumes V on I.VolumeID = V.VolumeID
+         JOIN VolumeIssueCount VC ON VC.VolumeID = V.VolumeID
+GROUP BY V.VolumeID, R.UserID;
+
+CREATE OR REPLACE VIEW IssueReadStatus AS
+SELECT I.*, RS.UserID, RS.IsRead, RS.CurrentPage
+FROM Issues I
+         JOIN ReadStatus RS on I.IssueID = RS.IssueID;

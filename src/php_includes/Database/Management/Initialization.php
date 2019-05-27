@@ -16,9 +16,13 @@ class Initialization
 {
 
     private static $TableList = array("Issues", "Publishers", "Volumes", "UserGroups", "Users", "ReadStatus"); // List of the required tables.
-    private static $ViewList = array("VolumeIssueCount", "PublisherVolumes", "VolumeIssues"); // List of the required views.
+    private static $ViewList = array("VolumeIssueCount", "PublisherVolumes", "VolumeIssues", "VolumeReadStatus",
+        "IssueReadStatus"); // List of the required views.
+    private static $TriggersList = array("CreateReadStatusAfterIssueInsert", "CreateReadStatusAfterUserInsert"); // List of the required triggers.
     private static $TableScriptPath = "/var/www/html/php_includes/Database/Management/tables.sql"; // Path to the tables init script.
     private static $ViewScriptPath = "/var/www/html/php_includes/Database/Management/views.sql"; // Path to the views init script.
+    private static $TriggerScriptsPath = "/var/www/html/php_includes/Database/Management/"; // Path to the trigger init scripts.
+    private static $TriggerInitScripts = array("trigger1.sql", "trigger2.sql"); // The triggers have to be placed in separate files.
 
     /**
      * Check if the database tables and views exist.
@@ -40,10 +44,24 @@ class Initialization
                 $viewsNotInitialized = false; // Assume initialized. If at least one view can not be found, it will change to true.
                 $tables = $statement->fetchAll(PDO::FETCH_ASSOC);
                 $tables = array_column($tables, "Tables_in_ComicLib");
+
                 // Check if all tables were found.
                 foreach (self::$TableList as $table) {
                     if (!in_array($table, $tables)) {
                         $tablesNotInitialized = true;
+                    }
+                }
+                // Check if all triggers were found.
+                $statement = $connection->prepare("SHOW TRIGGERS FROM ComicLib"); // Grab trigger metadata.
+                $statement->execute();
+                if ($statement->rowCount() == 0) $tablesNotInitialized = true; // Too few triggers.
+                else {
+                    $triggers = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    $triggers = array_column($triggers, "Trigger");
+                    foreach (self::$TriggersList as $trigger) {
+                        if (!in_array($trigger, $triggers)) {
+                            $tablesNotInitialized = true;
+                        }
                     }
                 }
                 // If tables are already initialized, the views may be missing. Otherwise, the views are missing for sure.
@@ -92,7 +110,13 @@ class Initialization
         $errorMessage = "Initializing database failed!";    // Message to log in case of an error.
         if ($initTables) {
             // If the tables have to be initialized, the views do as well.
-            if (self::runScript(self::$TableScriptPath, "tables") == 0) {
+            $initTablesAndTriggers = 0;
+            $initTablesAndTriggers += self::runScript(self::$TableScriptPath, "tables");
+            foreach (self::$TriggerInitScripts as $triggerInitScript) {
+                $initTablesAndTriggers += self::runScript(self::$TriggerScriptsPath . $triggerInitScript,
+                    "triggers");
+            }
+            if ($initTablesAndTriggers == 0) {
                 // If script was run successfully (returns 0), init views.
                 if (self::runScript(self::$ViewScriptPath, "views") == 0) {
                     // If script was run successfully, log success.

@@ -1,1 +1,3 @@
-You can find the database initialization script under src/php_includes/Database/Management/tables.sql.
+You can find the database tables initialization script under src/php_includes/Database/Management/tables.sql.
+The database views init script is under src/php_includes/Database/Management/views.sql.
+The triggers need to be in separate files, so you can find them under src/php_includes/Management/trigger(1,2).sql.

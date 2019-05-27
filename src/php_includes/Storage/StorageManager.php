@@ -156,7 +156,6 @@ class StorageManager
                         if (!empty($issueFromComicVine)) {
                             // Successfully read issue from ComicVine. Add missing details.
                             $issueFromComicVine["IssueLocalPath"] = $filenameAndIssueID["FileName"];
-                            $issueFromComicVine["ReadStatus"] = 0;
                             array_push($issues, $issueFromComicVine);
                         } else {
                             // Error reading issue from ComicVine. Error is already logged. Log skipping file.
@@ -192,7 +191,6 @@ class StorageManager
                         /*
                         * Add volume to database.
                         */
-                        $volume["ReadStatus"] = 0;
                         $volume["VolumeLocalPath"] = $relativePath;
                         $this->volumes->add($volume);
 
@@ -353,7 +351,6 @@ class StorageManager
                 if (!empty($issueFromComicVine)) {
                     // Successfully read issue from ComicVine. Add missing details.
                     $issueFromComicVine["IssueLocalPath"] = $newIssue["FileName"];
-                    $issueFromComicVine["ReadStatus"] = 0;
                     array_push($issues, $issueFromComicVine);
                 } else {
                     // Error reading issue from ComicVine. Error is already logged. Log skipping file.

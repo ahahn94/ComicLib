@@ -5,6 +5,7 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Table.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/VolumeIssues.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Management/Connection.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Logging/Logging.php";
 
@@ -26,6 +27,46 @@ class ReadStatus
     public function __construct()
     {
         $this->connection = Connection::getInstance();
+    }
+
+    /**
+     * Update the ReadStatus of a single issue for a single user.
+     * @param $issueID string IssueID of the issue to update the ReadStatus for.
+     * @param $userID string UserID of the user to change the ReadStatus for.
+     * @param $readStatus boolean New ReadStatus as a boolean.
+     */
+    public function updateIssue($issueID, $userID, $readStatus)
+    {
+        $isRead = ($readStatus === true) ? 1 : 0;   // Turn boolean into TINYINT.
+        // Fill dataset with data to update. Reset CurrentPage to page 0.
+        $dataset = array("IssueID" => $issueID, "UserID" => $userID, "IsRead" => $isRead);
+        $this->update($dataset);
+    }
+
+    /**
+     * Update the ReadStatus of a whole volume for a single user.
+     * @param $volumeID string VolumeID of the issues to update the ReadStatus for.
+     * @param $userID string UserID of the user to change the ReadStatus for.
+     * @param $readStatus boolean New ReadStatus as a boolean.
+     */
+    public function updateVolume($volumeID, $userID, $readStatus)
+    {
+        $isRead = ($readStatus === true) ? 1 : 0;   // Turn boolean into TINYINT.
+        // Fill dataset with data to update. Reset CurrentPage to page 0.
+        $dataset = array("UserID" => $userID, "IsRead" => $isRead, "CurrentPage" => 0);
+        // Get volume issues.
+        $volumeIssuesRepo = new VolumeIssues();
+        $volumeIssues = $volumeIssuesRepo->getSelection($volumeID);
+        if (!empty($volumeIssues)) {
+            foreach ($volumeIssues as $volumeIssue) {
+                $issue = array_merge($dataset, array("IssueID" => $volumeIssue["IssueID"]));
+                $this->update($issue);
+            }
+        } else {
+            // Error reading volume issues. Log error.
+            $errorMessage = "Error updating ReadStatus {UserID =  $userID, VolumeID = $volumeID} on the database!";
+            Logging::logError($errorMessage);
+        }
     }
 
     /**

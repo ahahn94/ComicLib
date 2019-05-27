@@ -18,7 +18,7 @@ class Issues implements Table
     private $connection = null; // Database connection.
 
     private static $columns = array("VolumeID", "APIDetailURL", "Description", "ImageFileName", "ImageURL", "IssueLocalPath",
-        "IssueNumber", "Name", "ReadStatus"); // List of the valid columns.
+        "IssueNumber", "Name"); // List of the valid columns.
 
     /**
      * Issues constructor.

@@ -59,6 +59,9 @@ CREATE TABLE IF NOT EXISTS ReadStatus
     UserID      INTEGER,
     IsRead      TINYINT,
     CurrentPage INTEGER,
-    FOREIGN KEY (IssueID) REFERENCES Issues (IssueID),
-    FOREIGN KEY (UserID) REFERENCES Users (UserID)
+    FOREIGN KEY (IssueID) REFERENCES Issues (IssueID) ON DELETE CASCADE ,
+    FOREIGN KEY (UserID) REFERENCES Users (UserID) ON DELETE CASCADE
 );
+
+DROP TRIGGER IF EXISTS CreateReadStatusAfterIssueInsert;
+DROP TRIGGER IF EXISTS CreateReadStatusAfterUserInsert;

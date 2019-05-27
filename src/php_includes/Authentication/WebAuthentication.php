@@ -49,7 +49,8 @@ class WebAuthentication
      * @param $hash string Hashed Password from the Users table.
      * @return bool true if match, else false.
      */
-    public function verifyPassword($password, $hash){
+    public function verifyPassword($password, $hash)
+    {
         return password_verify($password, $hash);
     }
 
@@ -73,7 +74,7 @@ class WebAuthentication
                     if ($this->verifyPassword($password, $hashFromDB)) {
                         // Password is valid. Authorize.
                         $_SESSION["User"]["Name"] = $user["Name"];
-                        $_SESSION["User"]["UserGroupID"] = $user["UserGroupID"];
+                        $_SESSION["User"]["UserID"] = $user["UserID"];
                         // Set LastLogin on database.
                         $user["LastLogin"] = date("Y-m-d H:i:s");
                         $this->UsersRepo->update($user);
@@ -102,7 +103,7 @@ class WebAuthentication
                     $db = (new DateTime($user["LastLogin"]))->getTimestamp();
                     $now = (new DateTime(date("Y-m-d H:i:s")))->getTimestamp();
                     $diff = abs($now - $db) / 60;   // Difference between timestamp from database and now (minutes)
-                } catch (Exception $e){
+                } catch (Exception $e) {
                     Logging::logError("Error converting timestamps for session timeout: " . $e->getMessage());
                 }
                 if ($diff > $this->SessionTimeout) {
