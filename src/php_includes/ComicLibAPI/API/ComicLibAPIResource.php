@@ -5,15 +5,15 @@
  */
 
 /**
- * Interface SubController
- * Implements the function headers for API subcontroller classes in the MVC paradigm.
+ * Interface ComicLibAPIResource
+ * Implements the function headers for ComicLib API resource classes in the MVC paradigm.
  */
-interface APISubController
+interface ComicLibAPIResource
 {
     /**
-     * SubController constructor.
-     * @param $path array List of the parts of the path behind the subcontroller name.
-     * E.g. "subcontroller/path/to/resource" becomes $subcontrollerName="subcontroller" and $path=array("path","to","resource".
+     * ComicLibAPIResource constructor.
+     * @param $path array List of the parts of the path behind the api resource name.
+     * E.g. "apiResource/path/to/resource" becomes $apiResourceName="apiResource" and $path=array("path","to","resource".
      * @param $getParameters array List of the GET parameters behind the URL.
      */
     function __construct($path, $getParameters);

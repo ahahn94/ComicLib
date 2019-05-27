@@ -4,30 +4,26 @@
  * on 26.05.19
  */
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/API/APISubController.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/API/APIGenerics.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Authentication/APIAuthentication.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/ComicLibAPIResource.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/APIGenerics.php";
 
 /**
- * Class APIKeyController
- * Implements functions to handle authentication and access to the APIKey column of the ComicLib/Users table.
+ * Class V1Issues
+ * Implements functions to handle API access to the ComicLib/Issues database table.
  */
-class APIKeyController implements APISubController
+class V1Issues implements ComicLibAPIResource
 {
 
-    private $APIAuthentication = null;
-
     /**
-     * SubController constructor.
-     * @param $path array List of the parts of the path behind the subcontroller name.
-     * E.g. "subcontroller/path/to/resource" becomes $subcontrollerName="subcontroller" and $path=array("path","to","resource".
+     * ComicLibAPIResource constructor.
+     * @param $path array List of the parts of the path behind the api resource name.
+     * E.g. "apiResource/path/to/resource" becomes $apiResourceName="apiResource" and $path=array("path","to","resource".
      * @param $getParameters array List of the GET parameters behind the URL.
      */
     public function __construct($path, $getParameters)
     {
-        $this->APIAuthentication = new APIAuthentication();
-        // Call the function matching the HTTP request method.
         $requestMethod = APIGenerics::getRequestMethod();
+        // Call the function matching the HTTP request method.
         if ($requestMethod === "GET") {
             $this->GET();
         } else if ($requestMethod === "POST") {
@@ -47,18 +43,11 @@ class APIKeyController implements APISubController
      */
     function GET()
     {
-        // Authenticate with username and password from HTTP Authorization header.
-        $apiKey = $this->APIAuthentication->basicAuthentication();
-        if ($apiKey !== false) {
-            // Successfully authenticated. Send APIKey.
-            $responseCode = 200;
-            $headers = array(APIGenerics::getContentTypeJSON());
-            $body = array("APIKey" => $apiKey);
-            APIGenerics::sendAnswer($headers, $body, $responseCode);
-        } else {
-            // Authentication failed. Send 401 Unauthorized.
-            APIGenerics::sendUnauthorized();
-        }
+        /*
+         * Todo.
+         */
+        // Just for testing authentication.
+        print "Issues";
     }
 
     /**

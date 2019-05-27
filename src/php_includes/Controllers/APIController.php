@@ -5,22 +5,18 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Authentication/APIAuthentication.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/API/APIGenerics.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/APIGenerics.php";
 
 /**
  * Class APIController
- * Implements the controller for the ComicLib RESTful API.
+ * Implements the controller for the different versions of the ComicLib RESTful API.
  */
 class APIController implements Controller
 {
 
-    private $SubControllersPath = null; // The path to the subcontrollers php files.
+    private $APIControllersPath = null; // Path to the controllers for the different versions of the API.
 
-    private $APIAuthentication = null;
-
-    // List of the available subcontrollers.
-    private $SubControllers = array("apikey" => "APIKeyController", "issues" => "APIIssuesController");
+    private $APIControllers = array("v1" => "APIControllerV1");   // List of the different versions of API controllers.
 
     /**
      * Controller constructor.
@@ -30,42 +26,21 @@ class APIController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        $this->SubControllersPath = $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/API/";
-
-        /*
-         * Select subcontroller based on the beginning of $path.
-         */
-        // Get controller name.
-        $controllerName = $path[0];
-        $restOfPath = array_slice($path, 1);    // Rest of the path after removing the controller name.
-
-        // Check if the controller exists. If not, send 404 error.
-        if (in_array($controllerName, array_keys($this->SubControllers))) {
-            if ($controllerName === "apikey") {
-                // APIKeyController implements its own authentication.
-                require_once $this->SubControllersPath . "APIKeyController.php";
-                $controller = new APIKeyController($restOfPath, $getParameters);
-            } else {
-                // Check Bearer Token authorization.
-                $this->APIAuthentication = new APIAuthentication();
-                $authorized = $this->APIAuthentication->bearerTokenAuthentication();
-                if ($authorized === true) {
-                    // Successfully authenticated. Process request.
-                    $controllerClassName = $this->SubControllers[$controllerName];   // Name of the controller class.
-                    // Path to the controller class inside $ControllerPath.
-                    $controllerClassPath = "$controllerClassName.php";
-                    require_once $this->SubControllersPath . $controllerClassPath;
-                    $controller = new $controllerClassName($restOfPath, $getParameters);
-                } else {
-                    // Authentication failed. Send 401 Unauthorized.
-                    APIGenerics::sendUnauthorized();
-                }
-            }
+        $this->APIControllersPath = $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/APIControllers/";
+        // Get API version number.
+        $apiVersion = $path[0];
+        $restOfPath = array_slice($path, 1);
+        if (in_array($apiVersion, array_keys($this->APIControllers))) {
+            // Valid API version. Load controller.
+            $controllerClassName = $this->APIControllers[$apiVersion];   // Name of the controller class.
+            // Path to the controller class inside $APIControllersPath.
+            $controllerClassPath = "$controllerClassName.php";
+            require_once $this->APIControllersPath . $controllerClassPath;
+            $controller = new $controllerClassName($restOfPath, $getParameters);
         } else {
-            // Controller does not exist. Send 404.
+            // Invalid API version. Send 404 Not Found.
             APIGenerics::sendNotFound();
         }
-
     }
 
     /**
