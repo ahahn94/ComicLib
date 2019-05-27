@@ -34,8 +34,8 @@ if ($controllerName === "api") {
 } else {
     // Call to web app.
     /*
- * Handle login/logout.
- */
+    * Handle login/logout.
+    */
     $webAuthentication = new WebAuthentication();
 
     if ($_POST["logout"] === "true") {

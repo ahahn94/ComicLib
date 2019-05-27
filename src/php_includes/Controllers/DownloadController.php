@@ -26,7 +26,7 @@ class DownloadController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        $issueID = $getParameters["IssueID"];
+        $issueID = $path[0];
 
         /*
          * Try to get the issue matching IssueID from the database.

@@ -55,6 +55,9 @@ class UpdaterController implements Controller
         ob_end_flush();
         flush();
 
+        // Close session so loading of other pages from the session that started the updater do not block.
+        session_write_close();
+
         // Start update in background.
         $updater = new Updater();
         $updater->updateAll();

@@ -5,7 +5,8 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/VolumeIssues.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/IssueReadStatus.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/ReadStatus.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/Volumes.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
 
@@ -29,11 +30,28 @@ class VolumeIssuesController implements Controller
      */
     public function __construct($path, $getParameters)
     {
+        $userID = $_SESSION["User"]["UserID"];
+        // Update ReadStatus if requested.
+        if (!empty($_POST)) {
+            $issueID = $_POST["IssueID"];
+            $readStatus = $_POST["ReadStatus"];
+            if (!empty($issueID) && !empty($readStatus)) {
+                if ($readStatus === "true" || $readStatus === "false") {
+                    $readStatusRepo = new ReadStatus();
+                    $readStatus = ($readStatus === "true") ? true : false;
+                    $readStatusRepo->updateIssue($issueID, $userID, $readStatus);
+                }
+            }
+            // Redirect to same page to clear POST form data and enable going back inside the browser.
+            header("Location: /" . $_GET["_url"]);
+            exit();
+        }
+
         // Prepare data for view.
         // Get the VolumeID from path (the path should be like /volume/VolumeID, so $path[0] should contain the ID).
-        if (!empty($volumeID = $path[0])){
-            $volumeIssuesRepo = new VolumeIssues();
-            $this->volumeIssues = $volumeIssuesRepo->getSelection($volumeID);
+        if (!empty($volumeID = $path[0])) {
+            $issuesReadStatusRepo = new IssueReadStatus();
+            $this->volumeIssues = $issuesReadStatusRepo->getSelection($volumeID, $userID);
             $volumesRepo = new Volumes();
             $this->volume = $volumesRepo->get($volumeID);
             self::$CachePath = ImageCache::getImageCachePath();
@@ -47,7 +65,7 @@ class VolumeIssuesController implements Controller
     function generateDocument()
     {
         // Check if there are volumes to show.
-        if (!empty($this->volumeIssues)){
+        if (!empty($this->volumeIssues)) {
             // $volumeIssues contains issues. Show album view of issues.
             include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/VolumeIssuesView.php";
         } else {

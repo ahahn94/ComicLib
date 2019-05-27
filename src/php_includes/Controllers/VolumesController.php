@@ -5,7 +5,8 @@
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/PublisherVolumes.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/VolumeReadStatus.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Database/Resources/ReadStatus.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ImageCache.php";
 
 /**
@@ -27,9 +28,26 @@ class VolumesController implements Controller
      */
     public function __construct($path, $getParameters)
     {
+        $userID = $_SESSION["User"]["UserID"];
+        // Update ReadStatus if requested.
+        if (!empty($_POST)) {
+            $volumeID = $_POST["VolumeID"];
+            $readStatus = $_POST["ReadStatus"];
+            if (!empty($volumeID) && !empty($readStatus)) {
+                if ($readStatus === "true" || $readStatus === "false") {
+                    $readStatusRepo = new ReadStatus();
+                    $readStatus = ($readStatus === "true") ? true : false;
+                    $readStatusRepo->updateVolume($volumeID, $userID, $readStatus);
+                }
+            }
+            // Redirect to same page to clear POST form data and enable going back inside the browser.
+            header("Location: /" . $_GET["_url"]);
+            exit();
+        }
+
         // Prepare data for view.
-        $volumesRepo = new PublisherVolumes();
-        $this->volumes = $volumesRepo->getAll();
+        $volumesRepo = new VolumeReadStatus();
+        $this->volumes = $volumesRepo->getAll($userID);
         self::$CachePath = ImageCache::getImageCachePath();
     }
 
@@ -40,9 +58,9 @@ class VolumesController implements Controller
     function generateDocument()
     {
         // Check if there are volumes to show in the view.
-        if (!empty($this->volumes)){
+        if (!empty($this->volumes)) {
             // There are volumes to show. Send view VolumesView.
-        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/VolumesView.php";
+            include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/VolumesView.php";
         } else {
             // $this->volumes is empty. Show "Empty Database" view.
             include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/EmptyDatabaseView.php";

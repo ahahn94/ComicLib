@@ -62,6 +62,28 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
                         <div class="card-body">
                             <p class="card-text"><?php print($issue["Name"]); ?></p>
                             <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="/download/<?php print($issue["IssueID"]); ?>">
+                                        <button class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download
+                                        </button>
+                                    </a>
+                                    <!-- Form to update the ReadStatus of the issue. -->
+                                    <form method="post">
+                                        <input hidden name="IssueID" value="<?php print($issue["IssueID"]); ?>">
+                                        <input hidden name="ReadStatus" value="<?php
+                                        print (($issue["IsRead"] === "0") ? "true" : "false");
+                                        ?>">
+                                        <button class="btn" type="submit"><?php
+                                            if ($issue["IsRead"] === "0") {
+                                                // Not yet read.
+                                                ?><i class="fas fa-eye"></i><?php
+                                            } else {
+                                                // Already read. Grey out.
+                                                ?><i class="fas fa-eye fa-disabled"></i><?php
+                                            }
+                                            ?></button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
