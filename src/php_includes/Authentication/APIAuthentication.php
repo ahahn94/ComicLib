@@ -19,6 +19,8 @@ class APIAuthentication
     private $UsersRepo = null;
     private $WebAuthentication = null;
 
+    private $AuthenticatedUser = false;     // Contains the dataset of the authenticated user after login.
+
     /**
      * APIAuthentication constructor.
      */
@@ -51,7 +53,7 @@ class APIAuthentication
 
     /**
      * Check HTTP Basic authorization.
-     * @return bool|string String APIKey if successful, else boolean false.
+     * @return bool true if successful, else false.
      */
     public function basicAuthentication()
     {
@@ -84,8 +86,9 @@ class APIAuthentication
          */
         if ($this->validateCredentials($userName, $password)) {
             if (!empty($user = $this->UsersRepo->getByName($userName))) {
-                // Successfully read user from database. Return APIKey.
-                return $user["APIKey"];
+                // Successfully read user from database. Return true.
+                $this->AuthenticatedUser = $user;   // Set authenticated user.
+                return true;
             }
         }
         return false;
@@ -155,6 +158,21 @@ class APIAuthentication
         // Get user from database.
         $user = $this->UsersRepo->getByAPIKey($apiKey);
         // If no user was found ($user is empty), return false, else true.
+        if (!empty($user)) {
+            // Set authenticated user.
+            $this->AuthenticatedUser = $user;
+        }
         return !empty($user);
     }
+
+    /*
+     * Getters.
+     */
+
+    public function getAuthenticatedUser()
+    {
+        return $this->AuthenticatedUser;
+    }
+
+
 }

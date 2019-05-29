@@ -33,14 +33,15 @@ class ReadStatus
      * Update the ReadStatus of a single issue for a single user.
      * @param $issueID string IssueID of the issue to update the ReadStatus for.
      * @param $userID string UserID of the user to change the ReadStatus for.
-     * @param $readStatus boolean New ReadStatus as a boolean.
+     * @param $dataset array New ReadStatus (boolean) and CurrentPage (integer).
      */
-    public function updateIssue($issueID, $userID, $readStatus)
+    public function updateIssue($issueID, $userID, $dataset)
     {
-        $isRead = ($readStatus === true) ? 1 : 0;   // Turn boolean into TINYINT.
-        // Fill dataset with data to update. Reset CurrentPage to page 0.
-        $dataset = array("IssueID" => $issueID, "UserID" => $userID, "IsRead" => $isRead);
-        $this->update($dataset);
+        $isRead = ($dataset["IsRead"] === true) ? 1 : 0;   // Turn boolean into TINYINT.
+        // Fill update dataset with data to update.
+        $updateDataset = array("IssueID" => $issueID, "UserID" => $userID, "IsRead" => $isRead,
+            "CurrentPage" => $dataset["CurrentPage"]);
+        $this->update($updateDataset);
     }
 
     /**

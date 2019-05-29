@@ -14,8 +14,10 @@ class APIGenerics
     private static $ContentTypeJSON = "Content-Type: application/json";
 
     // List of the HTTP response codes and their messages.
-    private static $ResponseCodeMessages = array(200 => "OK", 401 => "Unauthorized", 404 => "Not Found",
-        405 => "Method Not Allowed");
+    private static $ResponseCodeMessages = array(200 => "OK", 400 => "Bad Request", 401 => "Unauthorized",
+        404 => "Not Found", 405 => "Method Not Allowed");
+
+    private static $APIPathV1 = "/api/v1/";     // Web path to the resources of version 1 of the API.
 
     /**
      * Send an answer to an API request.
@@ -78,6 +80,16 @@ class APIGenerics
     }
 
     /**
+     * Send a 400 Bad Request response.
+     */
+    public static function sendBadRequest()
+    {
+        $responseCode = 400;
+        $headers = array(self::$ContentTypeJSON);
+        self::sendAnswer($headers, array(), $responseCode);
+    }
+
+    /**
      * Turn an integer HTTP response code into an array of response code and response message.
      * @param $responseCode integer HTTP response code.
      * @return array|bool Array like array("Status" => array("ResponseCode => someIntCode,
@@ -101,5 +113,9 @@ class APIGenerics
         return self::$ContentTypeJSON;
     }
 
+    public static function getAPIPathV1(): string
+    {
+        return self::$APIPathV1;
+    }
 
 }

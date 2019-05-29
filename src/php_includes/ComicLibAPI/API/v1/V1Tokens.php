@@ -15,19 +15,24 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Authentication/APIAuthen
 class V1Tokens implements ComicLibAPIResource
 {
 
-    private $APIAuthentication = null;
+    private $path = null;
+    private $getParameters = null;
+    private $apiAuthentication = null;
 
     /**
      * ComicLibAPIResource constructor.
      * @param $path array List of the parts of the path behind the api resource name.
      * E.g. "apiResource/path/to/resource" becomes $apiResourceName="apiResource" and $path=array("path","to","resource".
      * @param $getParameters array List of the GET parameters behind the URL.
+     * @param $apiAuthentication APIAuthentication Object containing information on the authentication state.
      */
-    public function __construct($path, $getParameters)
+    public function __construct($path, $getParameters, $apiAuthentication)
     {
-        $this->APIAuthentication = new APIAuthentication();
-        // Call the function matching the HTTP request method.
+        $this->path = $path;
+        $this->getParameters = $getParameters;
+        $this->apiAuthentication = $apiAuthentication;
         $requestMethod = APIGenerics::getRequestMethod();
+        // Call the function matching the HTTP request method.
         if ($requestMethod === "GET") {
             $this->GET();
         } else if ($requestMethod === "POST") {
@@ -48,9 +53,11 @@ class V1Tokens implements ComicLibAPIResource
     function GET()
     {
         // Authenticate with username and password from HTTP Authorization header.
-        $apiKey = $this->APIAuthentication->basicAuthentication();
-        if ($apiKey !== false) {
+        $authenticated = $this->apiAuthentication->basicAuthentication();
+        if ($authenticated === true) {
             // Successfully authenticated. Send APIKey.
+            $user = $this->apiAuthentication->getAuthenticatedUser();
+            $apiKey = $user["APIKey"];
             $responseCode = 200;
             $headers = array(APIGenerics::getContentTypeJSON());
             $body = array("APIKey" => $apiKey);

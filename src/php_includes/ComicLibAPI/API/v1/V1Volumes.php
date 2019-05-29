@@ -10,10 +10,10 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/APIGener
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/v1/V1Repo.php";
 
 /**
- * Class V1Issues
- * Implements functions to handle API access to the ComicLib/Issues database table.
+ * Class V1Volumes
+ * Implements functions to handle API access to the ComicLib/Volumes database table.
  */
-class V1Issues implements ComicLibAPIResource
+class V1Volumes implements ComicLibAPIResource
 {
 
     private $path = null;
@@ -58,44 +58,50 @@ class V1Issues implements ComicLibAPIResource
         if (($user = $this->apiAuthentication->getAuthenticatedUser()) !== false) {
             // Authenticated. Proceed.
             if (empty($this->path)) {
-                // Request to the resource root. Send all issues.
-                $issues = $this->V1Repo->getIssues($user["UserID"]);
+                // Request to the resource root. Send all volumes.
+                $volumes = $this->V1Repo->getVolumes($user["UserID"]);
                 // Prepare answer.
                 $headers = array(APIGenerics::getContentTypeJSON());
-                $body = $issues;
-                // If issues where found, send 200 - OK, else 404 - Not Found.
-                $responseCode = (!empty($issues) ? 200 : 404);
+                $body = $volumes;
+                // If volumes where found, send 200 - OK, else 404 - Not Found.
+                $responseCode = (!empty($volumes) ? 200 : 404);
                 APIGenerics::sendAnswer($headers, $body, $responseCode);
             } else {
-                // $path has content -> request for single issue and possibly sub-resource.
-                $issueID = $this->path[0];
+                // $path has content -> request for single volume and possibly sub-resource.
+                $volumeID = $this->path[0];
                 $restOfPath = array_slice($this->path, 1);
                 if (empty($restOfPath)) {
-                    // Request for single issue. Get single issue and return it.
-                    $issue = $this->V1Repo->getIssue($user["UserID"], $issueID);
+                    // Request for single volume. Get single volume and return it.
+                    $volume = $this->V1Repo->getVolume($user["UserID"], $volumeID);
                     // Prepare answer.
                     $headers = array(APIGenerics::getContentTypeJSON());
-                    $body = $issue;
-                    // If issue was found, send 200 - OK, else 404 - Not Found.
-                    $responseCode = (!empty($issue) ? 200 : 404);
+                    $body = $volume;
+                    // If volume was found, send 200 - OK, else 404 - Not Found.
+                    $responseCode = (!empty($volume) ? 200 : 404);
                     APIGenerics::sendAnswer($headers, $body, $responseCode);
                 } else {
-                    // Request for sub-resource of the issue.
+                    // Request for sub-resource of the volume.
                     $subResource = $restOfPath[0];
                     $restOfPath = array_slice($restOfPath, 1);
                     if (empty($restOfPath)) {
                         // Length of the path is ok. Try to get sub-resource.
-                        // Sub-resource can be file or readstatus.
-                        if ($subResource === "file") {
-                            // Download requested. Send file.
-                            $this->V1Repo->downloadIssue($user["UserID"], $issueID);
+                        // Sub-resource can be issues or readstatus.
+                        if ($subResource === "issues") {
+                            // Send volume issues.
+                            $issues = $this->V1Repo->getVolumeIssues($user["UserID"], $volumeID);
+                            // Prepare answer.
+                            $headers = array(APIGenerics::getContentTypeJSON());
+                            $body = $issues;
+                            // If volumes where found, send 200 - OK, else 404 - Not Found.
+                            $responseCode = (!empty($issues) ? 200 : 404);
+                            APIGenerics::sendAnswer($headers, $body, $responseCode);
                         } else if ($subResource === "readstatus") {
                             // ReadStatus requested. Send it.
-                            $readStatus = $this->V1Repo->getIssueReadStatus($user["UserID"], $issueID);
+                            $readStatus = $this->V1Repo->getVolumeReadStatus($user["UserID"], $volumeID);
                             // Prepare answer.
                             $headers = array(APIGenerics::getContentTypeJSON());
                             $body = $readStatus;
-                            // If issues where found, send 200 - OK, else 404 - Not Found.
+                            // If volumes where found, send 200 - OK, else 404 - Not Found.
                             $responseCode = (!empty($readStatus) ? 200 : 404);
                             APIGenerics::sendAnswer($headers, $body, $responseCode);
                         } else {
@@ -129,8 +135,8 @@ class V1Issues implements ComicLibAPIResource
      */
     function PUT()
     {
-        // Check if call to /issues/{id}/readstatus.
-        if (!empty($issueID = $this->path[0]) && $this->path[1] === "readstatus") {
+        // Check if call to /volumes/{id}/readstatus.
+        if (!empty($volumeID = $this->path[0]) && $this->path[1] === "readstatus") {
             // Check if authenticated.
             if (($user = $this->apiAuthentication->getAuthenticatedUser()) !== false) {
                 // Authenticated.
@@ -141,13 +147,11 @@ class V1Issues implements ComicLibAPIResource
                     // Decoding successful. Proceed.
                     // Check if data has valid format.
                     $isRead = ctype_digit($readStatus["IsRead"]) ? intval($readStatus["IsRead"]) : false;
-                    $currentPage = ctype_digit($readStatus["CurrentPage"]) ? intval($readStatus["CurrentPage"]) : false;
-                    if ($isRead !== false && $currentPage !== false) {
+                    if ($isRead !== false) {
                         // Types seem ok. Proceed.
                         $isRead = ($isRead === 1) ? true : false;   // Turn int into bool.
-                        $dataset = array("IsRead" => $isRead, "CurrentPage" => $currentPage);
-                        // If $issueID is valid, returns the new ReadStatus, else empty array.
-                        $result = $this->V1Repo->setIssueReadStatus($user["UserID"], $issueID, $dataset);
+                        // If $volumeID is valid, returns the new ReadStatus, else empty array.
+                        $result = $this->V1Repo->setVolumeReadStatus($user["UserID"], $volumeID, $isRead);
                         $statusCode = (empty($result)) ? 404 : 200;
                         APIGenerics::sendAnswer(array(APIGenerics::getContentTypeJSON()), $result, $statusCode);
                     } else {
@@ -163,7 +167,7 @@ class V1Issues implements ComicLibAPIResource
                 APIGenerics::sendUnauthorized();
             }
         } else {
-            // PUT is only allowed on /issues/{id}/readstatus.
+            // PUT is only allowed on /volumes/{id}/readstatus.
             APIGenerics::sendMethodNotAllowed();
         }
     }

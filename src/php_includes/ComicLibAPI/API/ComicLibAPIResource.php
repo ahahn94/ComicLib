@@ -15,8 +15,9 @@ interface ComicLibAPIResource
      * @param $path array List of the parts of the path behind the api resource name.
      * E.g. "apiResource/path/to/resource" becomes $apiResourceName="apiResource" and $path=array("path","to","resource".
      * @param $getParameters array List of the GET parameters behind the URL.
+     * @param $apiAuthentication APIAuthentication Object containing information on the authentication state.
      */
-    function __construct($path, $getParameters);
+    function __construct($path, $getParameters, $apiAuthentication);
 
     /*
      * Functions for the HTTP request methods used in the API.

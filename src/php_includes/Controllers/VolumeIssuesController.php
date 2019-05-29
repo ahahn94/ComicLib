@@ -35,11 +35,11 @@ class VolumeIssuesController implements Controller
         if (!empty($_POST)) {
             $issueID = $_POST["IssueID"];
             $readStatus = $_POST["ReadStatus"];
+            $dataset = array("IsRead" => $readStatus, "CurrentPage" => 0);
             if (!empty($issueID) && !empty($readStatus)) {
                 if ($readStatus === "true" || $readStatus === "false") {
                     $readStatusRepo = new ReadStatus();
-                    $readStatus = ($readStatus === "true") ? true : false;
-                    $readStatusRepo->updateIssue($issueID, $userID, $readStatus);
+                    $readStatusRepo->updateIssue($issueID, $userID, $dataset);
                 }
             }
             // Redirect to same page to clear POST form data and enable going back inside the browser.

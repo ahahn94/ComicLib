@@ -90,7 +90,7 @@ class VolumeReadStatus implements CustomizedView
         try {
             $query->execute(array("UserID" => $userID, "VolumeID" => $volumeID));
             if ($query->rowCount() != 0) {
-                return $query->fetchAll(PDO::FETCH_ASSOC);
+                return $query->fetch(PDO::FETCH_ASSOC);
             } else return array();
         } catch (Exception $e) {
             // Error handling if error while writing to database.

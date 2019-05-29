@@ -19,7 +19,8 @@ class APIControllerV1
     private $APIAuthentication = null;
 
     // List of the available subcontrollers.
-    private $APIResources = array("tokens" => "V1Tokens", "issues" => "V1Issues");
+    private $APIResources = array("tokens" => "V1Tokens", "issues" => "V1Issues", "publishers" => "V1Publishers",
+        "volumes" => "V1Volumes");
 
     /**
      * Controller constructor.
@@ -43,22 +44,17 @@ class APIControllerV1
             if ($controllerName === "tokens") {
                 // V1Token implements its own authentication.
                 require_once $this->ResourcesPath . "V1Tokens.php";
-                $controller = new V1Tokens($restOfPath, $getParameters);
+                $controller = new V1Tokens($restOfPath, $getParameters, new APIAuthentication());
             } else {
-                // Check Bearer Token authorization.
-                $this->APIAuthentication = new APIAuthentication();
-                $authorized = $this->APIAuthentication->bearerTokenAuthentication();
-                if ($authorized === true) {
-                    // Successfully authenticated. Process request.
-                    $controllerClassName = $this->APIResources[$controllerName];   // Name of the controller class.
-                    // Path to the controller class inside $ControllerPath.
-                    $controllerClassPath = "$controllerClassName.php";
-                    require_once $this->ResourcesPath . $controllerClassPath;
-                    $controller = new $controllerClassName($restOfPath, $getParameters);
-                } else {
-                    // Authentication failed. Send 401 Unauthorized.
-                    APIGenerics::sendUnauthorized();
-                }
+                // Check Bearer Token authorization. Will set the $AuthenticatedUser if successful.
+                $APIAuthentication = new APIAuthentication();
+                $APIAuthentication->bearerTokenAuthentication();
+                // Load resource. Authentication will be checked inside the resource.
+                $controllerClassName = $this->APIResources[$controllerName];   // Name of the controller class.
+                // Path to the controller class inside $ControllerPath.
+                $controllerClassPath = "$controllerClassName.php";
+                require_once $this->ResourcesPath . $controllerClassPath;
+                $controller = new $controllerClassName($restOfPath, $getParameters, $APIAuthentication);
             }
         } else {
             // Controller does not exist. Send 404.
