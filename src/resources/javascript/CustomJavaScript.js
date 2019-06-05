@@ -40,3 +40,41 @@ function refreshElement($elementID, $url) {
     xmlhttp.open("GET", $url, true);
     xmlhttp.send();
 }
+
+/**
+ * Switch the d-none class of Bootstrap on an element on and off.
+ * Can be used to hide elements.
+ * @param e Event triggering the function.
+ * @param $id ID of the element to switch d-none on.
+ */
+function switchHide(e, $id) {
+    $className = "d-none";
+    switchClass($id, $className);
+}
+
+/**
+ * Switch the custom invisibility class on an element on and off.
+ * Can be used to make elements invisible while keeping them clickable.
+ * @param e Event triggering the function.
+ * @param $id ID of the element to switch invisibility on.
+ */
+function switchInvisible(e, $id) {
+    $className = "invisibility";
+    switchClass($id, $className);
+}
+
+/**
+ * Add or remove a css class on an element.
+ * @param $id ID of the element to switch the class on.
+ * @param $className Class to add/remove.
+ */
+function switchClass($id, $className) {
+    $element = document.getElementById($id);
+    if ($element.classList.contains($className)) {
+        // Class is set. Remove class.
+        $element.classList.remove($className);
+    } else {
+        // Class is not set. Add class.
+        $element.classList.add($className);
+    }
+}

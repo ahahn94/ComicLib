@@ -12,6 +12,9 @@
             <li class="nav-item <?php if (self::$CurrentPage == 'publishers') print 'active'; ?>">
                 <a class="nav-link" href="/publishers"><i class="fas fa-building"> Publishers</i></a>
             </li>
+            <li class="nav-item <?php if (self::$CurrentPage == 'readinglist') print 'active'; ?>">
+                <a class="nav-link" href="/readinglist"><i class="fas fa-bookmark"> Reading List</i></a>
+            </li>
             <li class="nav-item <?php if (self::$CurrentPage == 'update') print 'active'; ?>">
                 <a class="nav-link" href="/update"><i class="fas fa-sync-alt"> Update</i></a>
             </li>
@@ -25,6 +28,6 @@
         </div>
     </div>
 </nav>
-<div style="padding: 50px 0 0 0;">
+<div style="padding: 50px 0 0 0" id="menu-spacer">
     <!-- Spacer behind the nav-bar to avoid content hiding behind nav-bar.-->
 </div>

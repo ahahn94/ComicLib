@@ -54,49 +54,67 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
             <?php
             // Insert an album card for every volume in $this->volumes (passed from VolumesController).
             foreach ($this->publisherVolumes as $volume) {
-                if ($volume["IssueCount"] > 0) {
+                if ($volume["IssueCount"] != 0) {
                     ?>
 
-                    <div class="col-6 col-md-4 col-lg-2 col-xl-2 card-group">
+                    <div class="col-6 col-md-4 col-lg-4 col-xl-2 card-group">
                         <div class="card mb-4 shadow-lg">
-                            <a href="/volume/<?php print($volume["VolumeID"]); ?>">
-                                <img class="card-img-top"
-                                     src="<?php print(self::$CachePath . $volume["ImageFileName"]) ?>">
-                            </a>
-                            <div class="card-body d-flex flex-column">
+                            <div>
+                                <a href="/volume/<?php print($volume["VolumeID"]); ?>">
+                                    <img class="card-img-top" alt=""
+                                         src="<?php print(self::$CachePath . $volume["ImageFileName"]) ?>">
+                                </a>
+                                <?php
+                                if ($volume["IsRead"] === "0") {
+                                    ?>
+                                    <div class="readStatusBadge bg-success text-light">New</div>
+                                    <?php
+                                }
+                                ?>
+
+                            </div>
+                            <div class="card-body d-flex flex-column text-center">
                                 <p class="card-text"><?php print($volume["Name"]); ?></p>
-                                <div class="d-flex justify-content-between align-items-center mt-auto">
-                                    <div class="btn-group">
-                                        <a href="/volume/<?php print($volume["VolumeID"]); ?>">
-                                            <button class="btn btn-primary btn-sm"><i class="fas fa-archive"></i> Issues
-                                            </button>
+
+                                <form method="post">
+                                    <input hidden name="VolumeID" value="<?php print($volume["VolumeID"]); ?>">
+                                    <input hidden name="ReadStatus" value="<?php
+                                    print (($volume["IsRead"] === "0") ? "true" : "false"); ?>">
+
+                                    <div class="btn-group" role="group">
+                                        <a href="/volume/<?php print($volume["VolumeID"]); ?>" class="btn btn-primary">
+                                            <i class="fas fa-archive"></i>
+                                            <span class="d-none d-lg-inline"> Show Issues</span>
+                                            <span class="d-lg-none"> Issues</span>
                                         </a>
-                                        <!-- Form to update the ReadStatus of the issue. -->
-                                        <form method="post">
-                                            <input hidden name="VolumeID" value="<?php print($volume["VolumeID"]); ?>">
-                                            <input hidden name="ReadStatus" value="<?php
-                                            print (($volume["IsRead"] === "0") ? "true" : "false");
-                                            ?>">
-                                            <button class="btn" type="submit">
+                                        <button id="btnGroupDrop1" type="button"
+                                                class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right"
+                                             aria-labelledby="btnGroupDrop1">
+
+                                            <button class="dropdown-item" type="submit">
                                                 <?php
                                                 if ($volume["IsRead"] === "0") {
                                                     // Not yet read.
                                                     ?>
-                                                    <i class="fas fa-eye"></i>
+                                                    <i class="fas fa-eye"></i> Mark as read
                                                     <?php
                                                 } else {
                                                     // Already read. Grey out.
                                                     ?>
-                                                    <i class="fas fa-eye fa-disabled"></i>
+                                                    <i class="fas fa-eye"></i> Mark as not read
                                                     <?php
                                                 }
                                                 ?>
                                             </button>
-                                        </form>
+                                        </div>
                                     </div>
-                                    <small class="text-muted"><?php print($volume["IssueCount"]); ?>
-                                        Issue<?php if ($volume["IssueCount"] > 1) print "s"; ?></small>
-                                </div>
+
+                                </form>
+                                <small class="text-muted"><?php print($volume["IssueCount"]); ?>
+                                    Issue<?php if ($volume["IssueCount"] > 1) print "s"; ?></small>
                             </div>
                         </div>
                     </div>

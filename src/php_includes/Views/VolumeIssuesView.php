@@ -17,6 +17,7 @@
      */
     require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/BootstrapHeader.html";
     require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/FontAwesomeHeader.html";
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Caching/ComicCache.php";
     ?>
 </header>
 <body>
@@ -55,36 +56,67 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
             foreach ($this->volumeIssues as $issue) {
                 ?>
 
-                <div class="col-6 col-sm-3 col-md-3 col-lg-2 col-xl-2 card-group">
+                <div class="col-6 col-md-4 col-lg-4 col-xl-2 card-group">
                     <div class="card mb-4 shadow-sm">
                         <img class="card-img-top" alt=""
                              src="<?php print(self::$CachePath . $issue["ImageFileName"]) ?>">
-                        <div class="card-body">
+
+                        <?php
+                        if ($issue["IsRead"] === "0") {
+                            ?>
+                            <div class="readStatusBadge bg-success text-light">New</div>
+                            <?php
+                        }
+                        ?>
+
+                        <div class="card-body d-flex flex-column text-center">
                             <p class="card-text"><?php print($issue["Name"]); ?></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/download/<?php print($issue["IssueID"]); ?>">
-                                        <button class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download
-                                        </button>
+
+                            <form method="post">
+                                <!-- Form to update the ReadStatus of the issue. -->
+                                <input hidden name="IssueID"
+                                       value="<?php print($issue["IssueID"]); ?>">
+                                <input hidden name="ReadStatus" value="<?php
+                                print (($issue["IsRead"] === "0") ? "true" : "false");
+                                ?>">
+
+                                <div class="btn-group" role="group">
+
+                                    <a href="/issue/<?php print($issue["IssueID"]); ?>"
+                                       class="btn btn-primary<?php
+                                       if (!ComicCache::isReadable($issue["IssueLocalPath"])) {
+                                           print "bootstrap-transparency";
+                                       } ?> btn-sm"><i class="fas fa-book-open"></i> Read this issue
                                     </a>
-                                    <!-- Form to update the ReadStatus of the issue. -->
-                                    <form method="post">
-                                        <input hidden name="IssueID" value="<?php print($issue["IssueID"]); ?>">
-                                        <input hidden name="ReadStatus" value="<?php
-                                        print (($issue["IsRead"] === "0") ? "true" : "false");
-                                        ?>">
-                                        <button class="btn" type="submit"><?php
+
+                                    <button id="btnGroupDrop1" type="button"
+                                            class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                    </button>
+
+                                    <div class="dropdown-menu dropdown-menu-right"
+                                         aria-labelledby="btnGroupDrop1">
+
+                                        <a class="dropdown-item"
+                                           href="/download/<?php print($issue["IssueID"]); ?>">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+
+                                        <button class="dropdown-item" type="submit"><?php
                                             if ($issue["IsRead"] === "0") {
                                                 // Not yet read.
-                                                ?><i class="fas fa-eye"></i><?php
+                                                ?><i class="fas fa-eye"></i> Mark as read<?php
                                             } else {
                                                 // Already read. Grey out.
-                                                ?><i class="fas fa-eye fa-disabled"></i><?php
+                                                ?><i class="fas fa-eye"> Mark as not read</i><?php
                                             }
                                             ?></button>
-                                    </form>
+
+                                    </div>
                                 </div>
-                            </div>
+
+
+                            </form>
                         </div>
                     </div>
                 </div>

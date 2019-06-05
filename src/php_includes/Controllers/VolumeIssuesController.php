@@ -34,10 +34,11 @@ class VolumeIssuesController implements Controller
         // Update ReadStatus if requested.
         if (!empty($_POST)) {
             $issueID = $_POST["IssueID"];
-            $readStatus = $_POST["ReadStatus"];
+            // Turn readstatus into boolean.
+            $readStatus = $_POST["ReadStatus"] === "true" ? true : ($_POST["ReadStatus"] === "false" ? false : "");
             $dataset = array("IsRead" => $readStatus, "CurrentPage" => 0);
-            if (!empty($issueID) && !empty($readStatus)) {
-                if ($readStatus === "true" || $readStatus === "false") {
+            if (!empty($issueID)) {
+                if ($readStatus === true || $readStatus === false) {
                     $readStatusRepo = new ReadStatus();
                     $readStatusRepo->updateIssue($issueID, $userID, $dataset);
                 }
