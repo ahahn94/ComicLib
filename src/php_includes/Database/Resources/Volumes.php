@@ -46,9 +46,7 @@ class Volumes implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading Volume {VolumeID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -70,9 +68,7 @@ class Volumes implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading Volumes from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -99,9 +95,7 @@ class Volumes implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error writing Volume {VolumeID = " . $dataset["VolumeID"] . "} to database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -131,9 +125,7 @@ class Volumes implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error updating Volume {VolumeID = " . $dataset["VolumeID"] . "} on the database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -154,9 +146,7 @@ class Volumes implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error removing Volume {VolumeID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return $query->errorCode();
     }

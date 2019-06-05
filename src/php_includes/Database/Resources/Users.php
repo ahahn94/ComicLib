@@ -46,9 +46,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading User {UserID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -71,9 +69,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading User {Name = " . $name . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -96,9 +92,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading User {APIKey = " . $apiKey . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -120,9 +114,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading Users from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -151,9 +143,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error writing User {UserID = " . $dataset["UserID"] . "} to database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -182,9 +172,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error writing User {UserID = " . $dataset["UserID"] . "} to database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -214,9 +202,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error updating User {UserID = " . $dataset["UserID"] . "} on the database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -237,9 +223,7 @@ class Users implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error removing User {UserID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();

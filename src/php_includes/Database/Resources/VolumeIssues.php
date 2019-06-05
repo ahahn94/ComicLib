@@ -44,9 +44,7 @@ class VolumeIssues implements View
             // Error handling if error while writing to database.
             $errorMessage = "Error reading VolumeIssues {VolumeID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -68,9 +66,7 @@ class VolumeIssues implements View
             // Error handling if error while writing to database.
             $errorMessage = "Error reading VolumeIssues from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }

@@ -44,9 +44,7 @@ class PublisherVolumes implements View
             // Error handling if error while writing to database.
             $errorMessage = "Error reading PublisherVolumes {PublisherID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -68,9 +66,7 @@ class PublisherVolumes implements View
             // Error handling if error while writing to database.
             $errorMessage = "Error reading PublisherVolumes from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }

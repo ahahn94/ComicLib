@@ -44,9 +44,7 @@ class IssueReadStatus implements CustomizedView
             // Error handling if error while writing to database.
             $errorMessage = "Error reading IssueReadStatus {UserID = $userID} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -70,9 +68,7 @@ class IssueReadStatus implements CustomizedView
             // Error handling if error while writing to database.
             $errorMessage = "Error reading IssueReadStatus {UserID = $userID, VolumeID = $volumeID} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -96,9 +92,7 @@ class IssueReadStatus implements CustomizedView
             // Error handling if error while writing to database.
             $errorMessage = "Error reading IssueReadStatus {UserID = $userID, IssueID = $issueID} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }

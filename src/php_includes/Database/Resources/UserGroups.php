@@ -45,9 +45,7 @@ class UserGroups implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading UserGroup {UserGroupID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -69,9 +67,7 @@ class UserGroups implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error reading UserGroups from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -98,9 +94,7 @@ class UserGroups implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error writing UserGroup {UserGroupID = " . $dataset["UserGroupID"] . "} to database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -128,9 +122,7 @@ class UserGroups implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error writing UserGroup {UserGroupID = " . $dataset["UserGroupID"] . "} to database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -160,9 +152,7 @@ class UserGroups implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error updating UserGroup {UserGroupID = " . $dataset["UserGroupID"] . "} on the database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -183,9 +173,7 @@ class UserGroups implements Table
             // Error handling if error while writing to database.
             $errorMessage = "Error removing UserGroup {UserGroupID = " . $id . "} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();

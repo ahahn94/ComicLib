@@ -89,9 +89,7 @@ class ReadStatus
             // Error handling if error while writing to database.
             $errorMessage = "Error reading ReadStatus {UserID =  $userID, IssueID = $issueID} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -114,9 +112,7 @@ class ReadStatus
             // Error handling if error while writing to database.
             $errorMessage = "Error reading ReadStatus {IssueID = $id} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -139,9 +135,7 @@ class ReadStatus
             // Error handling if error while writing to database.
             $errorMessage = "Error reading ReadStatus {UserID =  $id} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
         return array();
     }
@@ -169,9 +163,7 @@ class ReadStatus
             $errorMessage = "Error writing ReadStatus {UserID =  " . $dataset["UserID"] . ", IssueID = " .
                 $dataset["IssueID"] . "} to database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -202,9 +194,7 @@ class ReadStatus
             $errorMessage = "Error updating ReadStatus {UserID =  " . $dataset["UserID"] . ", IssueID = " .
                 $dataset["IssueID"] . "} on the database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
@@ -226,9 +216,7 @@ class ReadStatus
             // Error handling if error while writing to database.
             $errorMessage = "Error removing ReadStatus {UserID =  $userID, IssueID = $issueID} from database!";
             Logging::logError($errorMessage);
-            print($errorMessage . "<br>");
             Logging::logError($e->getMessage());
-            print($e->getMessage() . "<br>");
         }
 
         return $query->errorCode();
