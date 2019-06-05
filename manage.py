@@ -31,7 +31,7 @@ from os import system
 from sys import argv
 
 # Files that the server needs write access to.
-files_with_write_access = ["src/cache", "src/cache/images", "src/log.txt", "src/updater.lock"]
+files_with_write_access = ["src/cache", "src/cache/images", "src/cache/comics", "src/log.txt", "src/updater.lock"]
 
 
 def start():
@@ -73,6 +73,15 @@ def clear_log():
     system("sudo truncate -s 0 src/log.txt; sudo chown 33 src/log.txt")
 
 
+def clear_cache():
+    """
+    Delete all content from the comics cache.
+    :return: None
+    """
+    print("Clearing the comics cache...")
+    system("sudo rm -r src/cache/comics/*")
+
+
 def help_screen():
     """
     Print the help screen.
@@ -83,7 +92,8 @@ def help_screen():
     print("Use 'manage.py stop' to stop the containers of the ComicLib server.")
     print("Use 'manage.py fix-permissions' to grant writing permission on the necessary files to the web server.")
     print("Use 'manage.py check-permissions' to check writing permission on the necessary files.")
-    print("Use 'manage.py clear-log' to to clear the log file src/log.txt.")
+    print("Use 'manage.py clear-log' to clear the log file src/log.txt.")
+    print("Use 'manage.py clear-cache' to clear the comics cache src/cache/comics/ to free up disk space.")
 
 
 def prepare_config():
@@ -171,5 +181,7 @@ else:
         print(check_permissions())
     elif params[0] == "clear-log":
         clear_log()
+    elif params[0] == "clear-cache":
+        clear_cache()
     else:
         help_screen()

@@ -4,3 +4,5 @@ src/cache
 !src/cache/images/.keep
 mysql-data
 !mysql-data/.keep
+src/cache/comics
+!src/cache/comics/.keep
