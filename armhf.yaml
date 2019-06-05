@@ -7,10 +7,11 @@ services:
     ports:
     - "8081:80"
     volumes:
-    - ./config/php/:/usr/local/etc/php/
     - ./config/apache2/sites-enabled:/etc/apache2/sites-enabled
     - ./src/:/var/www/html
+    - ./config/php/:/usr/local/etc/php/
     - ./config/ComicLib/:/var/www/ComicLibConfig/
+    - ./config/ImageMagick/policy.xml:/etc/ImageMagick-6/policy.xml # Increase RAM for Image Magick to 2GB.
     command: bash -c "source /etc/apache2/envvars; apache2 -D FOREGROUND"
   database:
     image: hypriot/rpi-mysql:5.5
