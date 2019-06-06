@@ -41,6 +41,50 @@ document.getElementById("pageSlider").onchange = function (e) {
     $('#carousel').carousel(pageNumber).carousel("pause");
 };
 
+// Toggle fullscreen of the browser window.
+document.getElementById("toggleFullscreenButton").addEventListener("click", async function (e) {
+    var isFullScreen = (document.fullscreenElement !== null);   // If no element is in fullscreen, fullscreen mode is off.
+    if (isFullScreen) {
+        leaveFullScreen();
+    } else {
+        enterFullScreen();
+    }
+});
+
+// Enter fullscreen mode.
+function enterFullScreen() {
+    if (document.documentElement.requestFullScreen) {
+        // Generic Fullscreen API version.
+        document.documentElement.requestFullScreen();
+    } else if (document.documentElement.webkitRequestFullScreen) {
+        // Version for webkit browser.
+        document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    } else if (document.documentElement.mozRequestFullScreen) {
+        // Version for Firefox.
+        document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+        // Version for Internet Explorer.
+        document.documentElement.msRequestFullscreen();
+    }
+}
+
+// Leave the fullscreen mode.
+function leaveFullScreen() {
+    if (document.exitFullscreen) {
+        // Generic Fullscreen API version.
+        document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+        // Version for webkit browsers.
+        document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        // Version for Firefox.
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+        // Version for Internet Explorer.
+        document.webkitExitFullscreen();
+    }
+}
+
 // Handle swiping.
 swiper.init(document.getElementById("swipeZone"));
 swiper.setSwipeLeft(function () {

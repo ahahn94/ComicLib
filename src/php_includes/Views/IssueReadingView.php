@@ -31,7 +31,8 @@
     <form id="sliderForm" oninput="pageSliderSelection.value= 'Page ' + (parseInt(pageSlider.value)) +
             '/<?php print (sizeof($this->images)); ?>'">
         <input type="range" min="1" max="<?php $size = print (sizeof($this->images)); ?>" step="1"
-               value="<?php print($this->currentPage); ?>" class="slider" id="pageSlider" name="pageSlider">
+               value="<?php print($this->currentPage); ?>" class="slider" id="pageSlider" name="pageSlider"
+        title="Go to page">
         <div class="carousel-caption">
             <strong class="bg-dark bootstrap-transparency">
                 <output name="pageSliderSelection"><?php print ("Page " . ($this->currentPage) . "/" . sizeof($this->images)); ?></output>
@@ -64,13 +65,18 @@
     </div>
 
     <div id="controls">
+        <button class="btn btn-secondary bootstrap-transparency fullscreen-button" id="toggleFullscreenButton"
+                title="Toggle fullscreen">
+            <i class="fas fa-expand fa-lg"></i>
+        </button>
+
         <a class="carousel-control-prev bg-dark bootstrap-transparency" href="#myCarousel" role="button" id="prev"
-           data-slide="prev">
+           data-slide="prev" title="Previous page">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
         <a class="carousel-control-next bg-dark bootstrap-transparency" href="#myCarousel" role="button" id="next"
-           data-slide="next">
+           data-slide="next" title="Next page">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>

@@ -137,6 +137,16 @@ CSS classes for the IssueReadingView.
     cursor: pointer;
 }
 
+/* Position the fullscreen toggle button inside the reading view. */
+.fullscreen-button {
+    position: absolute;
+    right: 12%;
+    top: 12%;
+    z-index: 15;
+    background: #343a40;
+    opacity: 0.5;
+}
+
 /* Make an element invisible while keeping it clickable. */
 .invisibility {
     color: transparent !important;
