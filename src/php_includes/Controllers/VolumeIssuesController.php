@@ -55,6 +55,33 @@ class VolumeIssuesController implements Controller
             $this->volumeIssues = $issuesReadStatusRepo->getSelection($volumeID, $userID);
             $volumesRepo = new Volumes();
             $this->volume = $volumesRepo->get($volumeID);
+
+            /*
+             * Sort volume issues by issue number.
+             * As the issue numbers can contain non-digit characters, sort by string comparison if
+             * any of the issue numbers contains a non-digit character.
+             */
+
+            $sortNumeric = true;    // Default to sorting the issues numerically by issue number.
+
+            // Check if all issue numbers are numeric.
+            foreach ($this->volumeIssues as $issue) {
+                // IssueNumber contains non-digit characters. Sort array alphabetically.
+                if (!ctype_digit($issue["IssueNumber"])) $sortNumeric = false;
+            }
+
+            if ($sortNumeric) {
+                // Sort issues ascending by comparing the integer values of the issue numbers.
+                uasort($this->volumeIssues, function ($a, $b) {
+                    return intval($a["IssueNumber"]) - intval($b["IssueNumber"]);
+                });
+            } else {
+                // Sort issues ascending by comparing the strings of the issue numbers.
+                uasort($this->volumeIssues, function ($a, $b) {
+                    return strcmp($a["IssueNumber"], $b["IssueNumber"]);
+                });
+            }
+
             self::$CachePath = ImageCache::getImageCachePath();
         }   // Else do nothing, generateDocument will show the "404 Not Found" view.
     }
