@@ -33,7 +33,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
             ?>
 
             <nav aria-label="Page navigation" class="text-center">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination justify-content-center flex-wrap">
                     <li class="page-item  <?php if ($this->previousPage === "") print ("disabled"); ?>"><a
                                 class="page-link" href="/volumes/<?php print ($this->previousPage); ?>">Previous
                         </a>
@@ -149,7 +149,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
             ?>
 
             <nav aria-label="Page navigation" class="text-center">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination justify-content-center flex-wrap">
                     <li class="page-item  <?php if ($this->previousPage === "") print ("disabled"); ?>"><a
                                 class="page-link" href="/volumes/<?php print ($this->previousPage); ?>">Previous
                         </a>
