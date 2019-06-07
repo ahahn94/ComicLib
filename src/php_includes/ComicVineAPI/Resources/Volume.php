@@ -52,7 +52,7 @@ class Volume implements APIResource
             $volume["PublisherID"] = $decodedString["publisher"]["id"];
             $volume["APIDetailURL"] = $decodedString["api_detail_url"];
             $volume["Description"] = Processing::fixURLs($decodedString["description"]);
-            $volume["ImageURL"] = $decodedString["image"]["medium_url"];
+            $volume["ImageURL"] = $decodedString["image"]["small_url"];
             $volume["Name"] = $decodedString["name"];
             $volume["StartYear"] = $decodedString["start_year"];
             return $volume;

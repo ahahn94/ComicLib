@@ -52,7 +52,7 @@ class Issue implements APIResource
             $issue["VolumeID"] = $decodedString["volume"]["id"];
             $issue["APIDetailURL"] = $decodedString["api_detail_url"];
             $issue["Description"] = Processing::fixURLs($decodedString["description"]);
-            $issue["ImageURL"] = $decodedString["image"]["medium_url"];
+            $issue["ImageURL"] = $decodedString["image"]["small_url"];
             $issue["IssueNumber"] = $decodedString["issue_number"];
             $issue["Name"] = $decodedString["name"];
             return $issue;
