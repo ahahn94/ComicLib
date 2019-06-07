@@ -27,6 +27,39 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
 <div class="album py-5 bg-light">
     <div class="container-fluid">
 
+        <?php
+        if ($this->previousPage !== $this->nextPage) {
+            // Show pages buttons if either a next page, a previous page or both exist.
+            ?>
+
+            <nav aria-label="Page navigation" class="text-center">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item  <?php if ($this->previousPage === "") print ("disabled"); ?>"><a
+                                class="page-link" href="/volumes/<?php print ($this->previousPage); ?>">Previous
+                        </a>
+                    </li>
+
+                    <?php
+                    for ($i = 1; $i <= $this->pageCount; $i++) {
+                        ?>
+
+                        <li class="page-item <?php if ($i === $this->activePage) print ("active"); ?>"><a
+                                    class="page-link" href="/volumes/<?php print ($i); ?>">
+                                <?php print ($i); ?></a></li>
+                        <?php
+                    } ?>
+
+                    <li class="page-item  <?php if ($this->nextPage === "") print ("disabled"); ?>"><a
+                                class="page-link" href="/volumes/<?php print ($this->nextPage); ?>">Next
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+            <?php
+        }
+        ?>
+
         <div class="row">
 
             <?php
@@ -109,6 +142,40 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/Menu.html";
             } ?>
 
         </div>
+
+        <?php
+        if ($this->previousPage !== $this->nextPage) {
+            // Show pages buttons if either a next page, a previous page or both exist.
+            ?>
+
+            <nav aria-label="Page navigation" class="text-center">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item  <?php if ($this->previousPage === "") print ("disabled"); ?>"><a
+                                class="page-link" href="/volumes/<?php print ($this->previousPage); ?>">Previous
+                        </a>
+                    </li>
+
+                    <?php
+                    for ($i = 1; $i <= $this->pageCount; $i++) {
+                        ?>
+
+                        <li class="page-item <?php if ($i === $this->activePage) print ("active"); ?>"><a
+                                    class="page-link" href="/volumes/<?php print ($i); ?>">
+                                <?php print ($i); ?></a></li>
+                        <?php
+                    } ?>
+
+                    <li class="page-item  <?php if ($this->nextPage === "") print ("disabled"); ?>"><a
+                                class="page-link" href="/volumes/<?php print ($this->nextPage); ?>">Next
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+            <?php
+        }
+        ?>
+
     </div>
 </div>
 

@@ -20,6 +20,12 @@ class VolumesController implements Controller
     private static $CachePath = "";             // Path to the image cache.
     private $volumes = array();                 // Volumes to show in the view.
 
+    // Variables for pagination.
+    private $activePage;        // Number of the active page.
+    private $pageCount;         // Number of pages available.
+    private $previousPage;      // Number of the previous page, empty string of not exists.
+    private $nextPage;          // Number of the next page, empty string of not exists.
+
     /**
      * Controller constructor.
      * @param $path array List of the parts of the path behind the controller name.
@@ -29,6 +35,18 @@ class VolumesController implements Controller
     public function __construct($path, $getParameters)
     {
         $userID = $_SESSION["User"]["UserID"];
+
+        // Check path for page number for pagination.
+        $pageSize = 24;     // Number of volumes per page.
+        $pageNumber = !empty($path[0]) ? $path[0] : "1";
+        if (!ctype_digit($pageNumber)) {
+            // Page number is not a number. Send 404 Not Found.
+            require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/NotFoundController.php";
+            $controller = new NotFoundController($path, $getParameters);
+            $controller->generateDocument();
+            exit();
+        }
+
         // Update ReadStatus if requested.
         if (!empty($_POST)) {
             $volumeID = $_POST["VolumeID"];
@@ -47,7 +65,41 @@ class VolumesController implements Controller
 
         // Prepare data for view.
         $volumesRepo = new VolumeReadStatus();
-        $this->volumes = $volumesRepo->getAll($userID);
+        $volumes = $volumesRepo->getAll($userID);
+
+
+        // Prepare pagination.
+        $pageNumber = intval($pageNumber);  // Cast to int.
+        $maximumPageCount = intval(ceil(sizeof($volumes) / $pageSize)); // use ceil to round up. Cast from float.
+
+        $this->activePage = $pageNumber;
+        $this->pageCount = $maximumPageCount;
+
+        if ($pageNumber === 1) {
+            $this->previousPage = "";   // No previous page.
+        } else {
+            $this->previousPage = $pageNumber - 1;
+        }
+
+        if ($pageNumber === $maximumPageCount) {
+            $this->nextPage = "";   // No next page.
+        } else {
+            $this->nextPage = $pageNumber + 1;
+        }
+
+        if ($pageNumber > $maximumPageCount) {
+            // Invalid page number (too big, so no content to display). Send 404 Not Found.
+            require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/NotFoundController.php";
+            $controller = new NotFoundController($path, $getParameters);
+            $controller->generateDocument();
+            exit();
+        }
+
+        // Get array slice with (pageNumber * pageSize) to ((pageNumber + 1) * pageSize - 1).
+        $offset = ($pageNumber - 1) * $pageSize;
+        $volumes = array_slice($volumes, $offset, $pageSize);
+
+        $this->volumes = $volumes;
         self::$CachePath = ImageCache::getImageCachePath();
     }
 
