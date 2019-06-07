@@ -118,12 +118,15 @@ class Publishers implements Table
                 return "$column = :$column";
             }, $datasetColumns));
 
+        // Filter dataset to only contain the keys from datasetColumns.
+        $filteredDataset = array_intersect_key($dataset, array_flip($datasetColumns));
+        $filteredDataset["PublisherID"] = $dataset["PublisherID"];
         // Using $dataAssignments assures that only valid and set array fields are updated.
         $statement = "UPDATE Publishers SET " . $dataAssignments . " WHERE PublisherID = :PublisherID";
         $query = $this->connection->prepare($statement);
 
         try {
-            $query->execute($dataset);
+            $query->execute($filteredDataset);
         } catch (Exception $e) {
             // Error handling if error while writing to database.
             $errorMessage = "Error updating Publisher {PublisherID = " . $dataset["PublisherID"] . "} on the database!";
