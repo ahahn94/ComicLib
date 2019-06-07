@@ -19,6 +19,17 @@
                 <a class="nav-link" href="/update"><i class="fas fa-sync-alt"> Update</i></a>
             </li>
         </ul>
+
+        <form class="form-inline form-control-sm mt-auto" method="get" action="/search">
+            <div class="input-group">
+                <input class="form-control form-control-sm" type="text" placeholder="Search volumes"
+                       aria-label="Search" name="searchText">
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+
         <div class="mt-auto">
             <form class="form-inline form-control-sm" method="post">
                 <input type="hidden" name="logout" value="true">

@@ -96,4 +96,29 @@ class VolumeReadStatus implements CustomizedView
         }
         return array();
     }
+
+    /**
+     * Search for volumes with $searchText in the name.
+     * @param $userID string UserID of the user to customize the dataset for.
+     * @param $searchText string Text to search the names for.
+     * @return array Datasets. Empty if 0 datasets where found or error.
+     */
+    public function search($userID, $searchText)
+    {
+        $statement =
+            "SELECT * FROM VolumeReadStatus WHERE UserID = :UserID AND Name LIKE CONCAT('%', :SearchText, '%') ORDER BY Name";
+        $query = $this->connection->prepare($statement);
+        try {
+            $query->execute(array("UserID" => $userID, "SearchText" => $searchText));
+            if ($query->rowCount() != 0) {
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } else return array();
+        } catch (Exception $e) {
+            // Error handling if error while writing to database.
+            $errorMessage = "Error searching VolumeReadStatus {UserID = $userID, SearchText = $searchText} on database!";
+            Logging::logError($errorMessage);
+            Logging::logError($e->getMessage());
+        }
+        return array();
+    }
 }

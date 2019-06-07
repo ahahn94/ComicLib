@@ -14,7 +14,8 @@ $ControllerPath = $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers";
 $Controllers = array("" => "VolumesController", "volumes" => "VolumesController", "volume" => "VolumeIssuesController",
     "publishers" => "PublishersController", "publisher" => "PublisherVolumesController", "download" =>
         "DownloadController", "update" => "UpdaterController", "updates" => "UpdaterStatusController", "login" =>
-        "LoginController", "issue" => "IssueController", "readinglist" => "ReadingListController");
+        "LoginController", "issue" => "IssueController", "readinglist" => "ReadingListController", "search" =>
+        "SearchController");
 
 /*
 * Dismantle URL into controller name, path and GET parameters.
