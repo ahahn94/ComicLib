@@ -87,7 +87,7 @@ class VolumesController implements Controller
             $this->nextPage = $pageNumber + 1;
         }
 
-        if ($pageNumber > $maximumPageCount) {
+        if ($pageNumber > $maximumPageCount && $pageNumber != 1) {
             // Invalid page number (too big, so no content to display). Send 404 Not Found.
             require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/NotFoundController.php";
             $controller = new NotFoundController($path, $getParameters);
