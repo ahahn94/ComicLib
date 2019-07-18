@@ -31,7 +31,8 @@ from os import system
 from sys import argv
 
 # Files that the server needs write access to.
-files_with_write_access = ["src/cache", "src/cache/images", "src/cache/comics", "src/log.txt", "src/updater.lock"]
+files_with_write_access = ["src/cache", "src/cache/images", "src/cache/comics", "src/log.txt", "src/updater.lock",
+                           "config/apache2"]
 
 
 def start():
@@ -82,6 +83,28 @@ def clear_cache():
     system("sudo rm -r src/cache/comics/*")
 
 
+def setup_letsencrypt():
+    """
+    Setup the webserver for HTTPS.
+    Will start the LetsEncrypt certbot,
+    which will guide the user through the setup process.
+    :return: None
+    """
+    print("Starting LetsEncrypt certbot...")
+    docker_control("setup-le")
+
+
+def renew_letsencrypt():
+    """
+    Renew the certificate created by setup_setup_letsencrypt.
+    Will start the LetsEncrypt certbot,
+    which will guide the user through the renewal process.
+    :return: None
+    """
+    print("Starting LetsEncrypt certbot...")
+    docker_control("renew-le")
+
+
 def help_screen():
     """
     Print the help screen.
@@ -94,6 +117,8 @@ def help_screen():
     print("Use 'manage.py check-permissions' to check writing permission on the necessary files.")
     print("Use 'manage.py clear-log' to clear the log file src/log.txt.")
     print("Use 'manage.py clear-cache' to clear the comics cache src/cache/comics/ to free up disk space.")
+    print("Use 'manage.py setup-le' to setup TLS via the LetsEncrypt certbot.")
+    print("Use 'manage.py renew-le' to renew your LetsEncrypt certificate.")
 
 
 def prepare_config():
@@ -157,6 +182,10 @@ def docker_control(command):
         system("docker-compose -f " + compose_file + " up -d")
     elif command == "stop":
         system("docker-compose -f " + compose_file + " stop")
+    elif command == "setup-le":
+        system("docker-compose -f " + compose_file + " exec webserver certbot --apache")
+    elif command == "renew-le":
+        system("docker-compose -f " + compose_file + " exec webserver certbot renew")
 
 
 #
@@ -183,5 +212,9 @@ else:
         clear_log()
     elif params[0] == "clear-cache":
         clear_cache()
+    elif params[0] == "setup-le":
+        setup_letsencrypt()
+    elif params[0] == "renew-le":
+        renew_letsencrypt()
     else:
         help_screen()

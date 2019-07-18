@@ -6,8 +6,10 @@ services:
     - database
     ports:
     - "8081:80"
+    - "8082:443"
     volumes:
     - ./config/apache2/sites-enabled:/etc/apache2/sites-enabled
+    - ./config/apache2/ports.conf:/etc/apache2/ports.conf
     - ./src/:/var/www/html
     - ./config/php/:/usr/local/etc/php/
     - ./config/ComicLib/:/var/www/ComicLibConfig/
