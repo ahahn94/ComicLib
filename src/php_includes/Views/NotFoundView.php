@@ -22,7 +22,7 @@
 <body>
 
 <!-- Full-screen background. -->
-<div style='background: url("/resources/images/NotFoundBackground.jpg") no-repeat center center fixed; background-size:
+<div style='background: url("/resources/images/Background.jpg") no-repeat center center fixed; background-size:
 cover; position: fixed; height: 100%; width: 100%;'>
 
     <?php

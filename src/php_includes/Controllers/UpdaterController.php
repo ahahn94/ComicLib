@@ -6,6 +6,7 @@
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Updater/Updater.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Management/UserManager.php";
 
 /**
  * Class UpdaterController
@@ -38,28 +39,35 @@ class UpdaterController implements Controller
      */
     function generateDocument()
     {
-        // Send view.
-        ignore_user_abort(true);    // Ignore user closing the connection.
+        // Check if member of admins group. Send 403 - Forbidden if not.
+        if (UserManager::getCurrentUser()["UserGroupID"] == UserManager::getGroupIDs()["admin"]){
+            // Send view.
+            ignore_user_abort(true);    // Ignore user closing the connection.
 
-        /*
-         * Disable the default time limit.
-         * The updates will continue running after the view is send, which will take some time.
-         */
-        set_time_limit(0);
+            /*
+             * Disable the default time limit.
+             * The updates will continue running after the view is send, which will take some time.
+             */
+            set_time_limit(0);
 
-        ob_start(); // Start new output buffer for sending the view.
-        header("Location: /updates");   // Redirect to /updates.
-        header('Connection: close');
-        header('Content-Length: ' . ob_get_length());
-        header('Content-Encoding: none');
-        ob_end_flush();
-        flush();
+            ob_start(); // Start new output buffer for sending the view.
+            header("Location: /updates");   // Redirect to /updates.
+            header('Connection: close');
+            header('Content-Length: ' . ob_get_length());
+            header('Content-Encoding: none');
+            ob_end_flush();
+            flush();
 
-        // Close session so loading of other pages from the session that started the updater do not block.
-        session_write_close();
+            // Close session so loading of other pages from the session that started the updater do not block.
+            session_write_close();
 
-        // Start update in background.
-        $updater = new Updater();
-        $updater->updateAll();
+            // Start update in background.
+            $updater = new Updater();
+            $updater->updateAll();
+        } else {
+            require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/ForbiddenController.php";
+            $controller = new ForbiddenController(array(), array());
+            $controller->generateDocument();
+        }
     }
 }

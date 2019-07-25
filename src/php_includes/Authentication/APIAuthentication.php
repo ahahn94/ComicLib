@@ -14,7 +14,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Authentication/WebAuthen
 class APIAuthentication
 {
 
-    private $APIKeyLength = 64; // API key length in bytes. The resulting key will contain $APIKeyLength * 2 characters.
+    private static $APIKeyLength = 64; // API key length in bytes. The resulting key will contain $APIKeyLength * 2 characters.
 
     private $UsersRepo = null;
     private $WebAuthentication = null;
@@ -34,11 +34,11 @@ class APIAuthentication
      * Generate an unique API key.
      * @return bool|string New API key if successful, else boolean false.
      */
-    public function generateAPIKey()
+    public static function generateAPIKey()
     {
         try {
             // Generate random bytes for the key.
-            $bytes = random_bytes($this->APIKeyLength);
+            $bytes = random_bytes(self::$APIKeyLength);
 
             // Turn random bytes into an upper case hex string with $APIKeyLength * 2 characters.
             $hex = bin2hex($bytes);
@@ -130,7 +130,7 @@ class APIAuthentication
             if (!empty($user = $this->UsersRepo->getByName($userName))) {
                 // User exists. Validate password.
                 $hashFromDB = $user["HashedPassword"];
-                if ($this->WebAuthentication->verifyPassword($password, $hashFromDB)) {
+                if (WebAuthentication::verifyPassword($password, $hashFromDB)) {
                     // Password is valid. Return true.
                     return true;
                 } else {

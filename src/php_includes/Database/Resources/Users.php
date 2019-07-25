@@ -127,9 +127,7 @@ class Users implements Table
     public function add($dataset)
     {
         // Collect list of columns to insert.
-        $columnsPlusUserID = array("UserID");
-        array_push($columnsPlusUserID, self::$columns); // Add UserID dynamically to enable auto increment.
-        $datasetColumns = array_intersect($columnsPlusUserID, array_keys($dataset));
+        $datasetColumns = array_intersect(self::$columns, array_keys($dataset));
         $columnNames = "" . join(", ", $datasetColumns);
         $columnDataPlaceholders = ":" . join(", :", $datasetColumns);
         // Using $columnNames and $columnDataPlaceholder assures that only valid and set array fields are inserted.

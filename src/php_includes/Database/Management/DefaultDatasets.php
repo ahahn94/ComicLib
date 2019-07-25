@@ -129,7 +129,7 @@ class DefaultDatasets
     {
         // Add default Password, LastLogin and APIKey.
         $this->DefaultUser["LastLogin"] = "";
-        $password = $this->WebAuthentication->hashPassword($this->DefaultUserCredentials["HashedPassword"]);
+        $password = WebAuthentication::hashPassword($this->DefaultUserCredentials["HashedPassword"]);
         if (strpos($this->DefaultUser["Name"], ":") !== false) {
             // User name contains a colon (":"), which is not allowed (due to HTTP BASIC AUTH in the API).
             // Log error and return.
@@ -143,7 +143,7 @@ class DefaultDatasets
             return;
         }
         $this->DefaultUser["HashedPassword"] = $password;
-        $apiKey = $this->APIAuthentication->generateAPIKey();
+        $apiKey = APIAuthentication::generateAPIKey();
         if ($apiKey === false) {
             // Failed to generate APIKey. Log error.
             Logging::logError("Could not create default user! Generating APIKey failed.");

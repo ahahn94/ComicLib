@@ -1,21 +1,19 @@
 <?php
 /**
  * Created by ahahn94
- * on 14.05.19
+ * on 21.07.19
  */
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Controllers/Controller.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Updater/Updater.php";
 
 /**
- * Class UpdaterStatusController
- * Implements the controller for the updates status view.
+ * Class ForbiddenController
+ * Implements the controller for the "403 - Forbidden" error message.
  */
-class UpdaterStatusController implements Controller
+class ForbiddenController implements Controller
 {
 
-    private static $CurrentPage = "";             // Current page. Specifies the menu entry to highlight.
-    private $updaterRunning = false;              // Current status of the Updater.
+    private static $CurrentPage = "";    // Current page. Specifies the menu entry to highlight.
 
     /**
      * Controller constructor.
@@ -25,8 +23,9 @@ class UpdaterStatusController implements Controller
      */
     public function __construct($path, $getParameters)
     {
-        // Get the updater status.
-        $this->updaterRunning = Updater::updaterRunning();
+        /*
+         * Nothing to do here, since the parameters are not needed to display the error message.
+         */
     }
 
     /**
@@ -35,6 +34,7 @@ class UpdaterStatusController implements Controller
      */
     function generateDocument()
     {
-        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/UpdaterStatusView.php";
+        http_response_code(403);
+        include $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Views/ForbiddenView.php";
     }
 }

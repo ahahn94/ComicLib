@@ -32,7 +32,7 @@ class WebAuthentication
      * @param $password string Password to hash.
      * @return bool|string Hashed password if successful, else boolean false.
      */
-    public function hashPassword($password)
+    public static function hashPassword($password)
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         if ($hash === false) {
@@ -49,7 +49,7 @@ class WebAuthentication
      * @param $hash string Hashed Password from the Users table.
      * @return bool true if match, else false.
      */
-    public function verifyPassword($password, $hash)
+    public static function verifyPassword($password, $hash)
     {
         return password_verify($password, $hash);
     }
@@ -71,10 +71,11 @@ class WebAuthentication
                 if (!empty($user = $this->UsersRepo->getByName($userName))) {
                     // User exists. Validate password.
                     $hashFromDB = $user["HashedPassword"];
-                    if ($this->verifyPassword($password, $hashFromDB)) {
+                    if (WebAuthentication::verifyPassword($password, $hashFromDB)) {
                         // Password is valid. Authorize.
                         $_SESSION["User"]["Name"] = $user["Name"];
                         $_SESSION["User"]["UserID"] = $user["UserID"];
+                        $_SESSION["User"]["UserGroupID"] = $user["UserGroupID"];
                         // Set LastLogin on database.
                         $user["LastLogin"] = date("Y-m-d H:i:s");
                         $this->UsersRepo->update($user);

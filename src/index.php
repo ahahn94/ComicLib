@@ -15,7 +15,7 @@ $Controllers = array("" => "VolumesController", "volumes" => "VolumesController"
     "publishers" => "PublishersController", "publisher" => "PublisherVolumesController", "download" =>
         "DownloadController", "update" => "UpdaterController", "updates" => "UpdaterStatusController", "login" =>
         "LoginController", "issue" => "IssueController", "readinglist" => "ReadingListController", "search" =>
-        "SearchController");
+        "SearchController","dashboard" => "DashboardController");
 
 /*
 * Dismantle URL into controller name, path and GET parameters.
