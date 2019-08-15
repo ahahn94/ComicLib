@@ -35,8 +35,12 @@ class APIGenerics
         }
         // Get status part of the body.
         $status = self::responseCodeToArray($responseCode);
-        // Set content.
-        $responseBody = json_encode(array_merge($status, array("Content" => $body)));
+
+        // If body is empty, use null instead.
+        if (empty($body)) $body = null;
+
+            // Set content.
+            $responseBody = json_encode(array_merge($status, array("Content" => $body)));
         print($responseBody);
     }
 
