@@ -153,8 +153,8 @@ class V1Repo
         $publisher = $this->PublishersRepo->get($publisherID);
         if (!empty($publisher)) {
             // Publisher found. Format publisher and return it.
-            $formattedVolume = $this->formatVolume($publisher);
-            return $formattedVolume;
+            $formattedPublisher = $this->formatPublisher($publisher);
+            return $formattedPublisher;
         } else {
             // No publisher found. Return empty array.
             return array();
