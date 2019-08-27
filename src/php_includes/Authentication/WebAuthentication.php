@@ -77,7 +77,7 @@ class WebAuthentication
                         $_SESSION["User"]["UserID"] = $user["UserID"];
                         $_SESSION["User"]["UserGroupID"] = $user["UserGroupID"];
                         // Set LastLogin on database.
-                        $user["LastLogin"] = date("Y-m-d H:i:s");
+                        $user["LastLogin"] = gmdate("Y-m-d H:i:s");
                         $this->UsersRepo->update($user);
                         return true;
                     } else {

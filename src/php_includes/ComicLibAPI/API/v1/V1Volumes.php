@@ -147,11 +147,16 @@ class V1Volumes implements ComicLibAPIResource
                     // Decoding successful. Proceed.
                     // Check if data has valid format.
                     $isRead = ctype_digit($readStatus["IsRead"]) ? intval($readStatus["IsRead"]) : false;
-                    if ($isRead !== false) {
+                    $changed =
+                        (DateTime::createFromFormat("Y-m-d H:i:s", $readStatus["Changed"]) !== false
+                        ) ? true : false;
+
+                    if ($isRead !== false && $changed) {
                         // Types seem ok. Proceed.
                         $isRead = ($isRead === 1) ? true : false;   // Turn int into bool.
+                        $changed = $readStatus["Changed"];
                         // If $volumeID is valid, returns the new ReadStatus, else empty array.
-                        $result = $this->V1Repo->setVolumeReadStatus($user["UserID"], $volumeID, $isRead);
+                        $result = $this->V1Repo->setVolumeReadStatus($user["UserID"], $volumeID, $isRead, $changed);
                         $statusCode = (empty($result)) ? 404 : 200;
                         APIGenerics::sendAnswer(array(APIGenerics::getContentTypeJSON()), $result, $statusCode);
                     } else {

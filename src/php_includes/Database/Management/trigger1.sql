@@ -3,5 +3,7 @@ CREATE TRIGGER CreateReadStatusAfterIssueInsert
     ON Issues
     FOR EACH ROW
 BEGIN
-    INSERT INTO ReadStatus (IssueID, UserID, IsRead, CurrentPage) SELECT DISTINCT NEW.IssueID, UserID, 0, 0 FROM Users;
+    INSERT INTO ReadStatus (IssueID, UserID, IsRead, CurrentPage, Changed)
+    SELECT DISTINCT NEW.IssueID, UserID, 0, 0, UTC_TIMESTAMP()
+    FROM Users;
 END

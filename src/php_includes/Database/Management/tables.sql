@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS ReadStatus
     UserID      INTEGER,
     IsRead      TINYINT,
     CurrentPage INTEGER,
+    Changed     DATETIME,
     FOREIGN KEY (IssueID) REFERENCES Issues (IssueID) ON DELETE CASCADE ,
     FOREIGN KEY (UserID) REFERENCES Users (UserID) ON DELETE CASCADE
 );

@@ -40,6 +40,7 @@ class VolumeIssuesController implements Controller
             if (!empty($issueID)) {
                 if ($readStatus === true || $readStatus === false) {
                     $readStatusRepo = new ReadStatus();
+                    $dataset["Changed"] = gmdate("Y-m-d H:i:s");
                     $readStatusRepo->updateIssue($issueID, $userID, $dataset);
                 }
             }

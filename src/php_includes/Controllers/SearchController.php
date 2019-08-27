@@ -57,7 +57,8 @@ class SearchController implements Controller
                 if ($readStatus === "true" || $readStatus === "false") {
                     $readStatusRepo = new ReadStatus();
                     $readStatus = ($readStatus === "true") ? true : false;
-                    $readStatusRepo->updateVolume($volumeID, $userID, $readStatus);
+                    $changed = gmdate("Y-m-d H:i:s");
+                    $readStatusRepo->updateVolume($volumeID, $userID, $readStatus, $changed);
                     // Redirect to same page to clear POST form data and enable going back inside the browser.
                     header("Location: /" . $_GET["_url"] . "?searchText=" . urlencode($_GET["searchText"]));
                     exit();

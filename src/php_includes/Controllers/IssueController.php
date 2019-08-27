@@ -68,7 +68,8 @@ class IssueController implements Controller
                         if (($newIsRead !== "") && ($newCurrentPage !== "")) {
                             $readStatusRepo = new ReadStatus();
                             $userID = $_SESSION["User"]["UserID"];
-                            $dataset = array("CurrentPage" => $newCurrentPage, "IsRead" => $newIsRead);
+                            $changed = gmdate("Y-m-d H:i:s");
+                            $dataset = array("CurrentPage" => $newCurrentPage, "IsRead" => $newIsRead, "Changed" => $changed);
                             $readStatusRepo->updateIssue($issueID, $userID, $dataset);
                         }
                         exit(); // Exit here so no view is send (as updating the ReadStatus is a one way road).

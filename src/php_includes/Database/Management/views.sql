@@ -27,7 +27,9 @@ CREATE or REPLACE VIEW VolumeReadStatus AS
 SELECT V.*,
        R.UserID,
        VC.IssueCount,
-       IF(VC.IssueCount = SUM(R.IsRead), true, false) AS IsRead
+       IF(VC.IssueCount = SUM(R.IsRead), true, false) AS IsRead,
+       MAX(Changed)                                   AS Changed
+
 FROM ReadStatus R
          JOIN Issues I on R.IssueID = I.IssueID
          JOIN Volumes V on I.VolumeID = V.VolumeID
@@ -35,6 +37,6 @@ FROM ReadStatus R
 GROUP BY V.VolumeID, R.UserID;
 
 CREATE OR REPLACE VIEW IssueReadStatus AS
-SELECT I.*, RS.UserID, RS.IsRead, RS.CurrentPage
+SELECT I.*, RS.UserID, RS.IsRead, RS.CurrentPage, RS.Changed
 FROM Issues I
          JOIN ReadStatus RS on I.IssueID = RS.IssueID;

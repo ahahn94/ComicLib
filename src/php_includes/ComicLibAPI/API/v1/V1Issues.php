@@ -142,10 +142,15 @@ class V1Issues implements ComicLibAPIResource
                     // Check if data has valid format.
                     $isRead = ctype_digit($readStatus["IsRead"]) ? intval($readStatus["IsRead"]) : false;
                     $currentPage = ctype_digit($readStatus["CurrentPage"]) ? intval($readStatus["CurrentPage"]) : false;
-                    if ($isRead !== false && $currentPage !== false) {
+                    $changed =
+                        (DateTime::createFromFormat("Y-m-d H:i:s", $readStatus["Changed"]) !== false
+                        ) ? true : false;
+
+                    if ($isRead !== false && $currentPage !== false && $changed) {
                         // Types seem ok. Proceed.
                         $isRead = ($isRead === 1) ? true : false;   // Turn int into bool.
-                        $dataset = array("IsRead" => $isRead, "CurrentPage" => $currentPage);
+                        $changed = $readStatus["Changed"];
+                        $dataset = array("IsRead" => $isRead, "CurrentPage" => $currentPage, "Changed" => $changed);
                         // If $issueID is valid, returns the new ReadStatus, else empty array.
                         $result = $this->V1Repo->setIssueReadStatus($user["UserID"], $issueID, $dataset);
                         $statusCode = (empty($result)) ? 404 : 200;

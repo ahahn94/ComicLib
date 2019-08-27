@@ -62,7 +62,7 @@ class Logging
         if ($messageType == "warning") {
             $header = self::$WarningHeader;
         }
-        $header = $header . date("Y-m-d- H:i:s") . " ";
+        $header = $header . date("Y-m-d H:i:s") . " ";
         return $header;
     }
 }

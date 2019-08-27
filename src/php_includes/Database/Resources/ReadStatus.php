@@ -19,7 +19,7 @@ class ReadStatus
 
     private $connection = null; // Database connection.
 
-    private static $columns = array("IsRead", "CurrentPage"); // List of the valid columns.
+    private static $columns = array("IsRead", "CurrentPage", "Changed"); // List of the valid columns.
 
     /**
      * Issues constructor.
@@ -33,14 +33,14 @@ class ReadStatus
      * Update the ReadStatus of a single issue for a single user.
      * @param $issueID string IssueID of the issue to update the ReadStatus for.
      * @param $userID string UserID of the user to change the ReadStatus for.
-     * @param $dataset array New ReadStatus (boolean) and CurrentPage (integer).
+     * @param $dataset array New ReadStatus (boolean), CurrentPage (integer) and Changed (datetime).
      */
     public function updateIssue($issueID, $userID, $dataset)
     {
         $isRead = ($dataset["IsRead"] === true) ? 1 : 0;   // Turn boolean into TINYINT.
         // Fill update dataset with data to update.
         $updateDataset = array("IssueID" => $issueID, "UserID" => $userID, "IsRead" => $isRead,
-            "CurrentPage" => $dataset["CurrentPage"]);
+            "CurrentPage" => $dataset["CurrentPage"], "Changed" => $dataset["Changed"]);
         $this->update($updateDataset);
     }
 
@@ -49,12 +49,13 @@ class ReadStatus
      * @param $volumeID string VolumeID of the issues to update the ReadStatus for.
      * @param $userID string UserID of the user to change the ReadStatus for.
      * @param $readStatus boolean New ReadStatus as a boolean.
+     * @param $changed string Datetime of the change.
      */
-    public function updateVolume($volumeID, $userID, $readStatus)
+    public function updateVolume($volumeID, $userID, $readStatus, $changed)
     {
         $isRead = ($readStatus === true) ? 1 : 0;   // Turn boolean into TINYINT.
         // Fill dataset with data to update. Reset CurrentPage to page 0.
-        $dataset = array("UserID" => $userID, "IsRead" => $isRead, "CurrentPage" => 0);
+        $dataset = array("UserID" => $userID, "IsRead" => $isRead, "CurrentPage" => 0, "Changed" => $changed);
         // Get volume issues.
         $volumeIssuesRepo = new VolumeIssues();
         $volumeIssues = $volumeIssuesRepo->getSelection($volumeID);

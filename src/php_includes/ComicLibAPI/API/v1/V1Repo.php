@@ -218,7 +218,7 @@ class V1Repo
         if (!empty($readStatus)) {
             // Remove all unnecessary data from dataset before return.
             $filteredReadStatus = array("IssueID" => $readStatus["IssueID"], "IsRead" => $readStatus["IsRead"],
-                "CurrentPage" => $readStatus["CurrentPage"]);
+                "CurrentPage" => $readStatus["CurrentPage"], "Changed" => $readStatus["Changed"]);
             return $filteredReadStatus;
         } else {
             // ReadStatus not found. Return empty array.
@@ -238,7 +238,7 @@ class V1Repo
         $readStatus = $this->VolumeReadStatusRepo->getSingleDataset($volumeID, $userID);
         if (!empty($readStatus)) {
             // Remove all unnecessary data from dataset before return.
-            $filteredReadStatus = array("VolumeID" => $readStatus["VolumeID"], "IsRead" => $readStatus["IsRead"]);
+            $filteredReadStatus = array("VolumeID" => $readStatus["VolumeID"], "IsRead" => $readStatus["IsRead"], "Changed" => $readStatus["Changed"]);
             return $filteredReadStatus;
         } else {
             // ReadStatus not found. Return empty array.
@@ -250,7 +250,7 @@ class V1Repo
      * Update the ReadStatus for a single issue.
      * @param $userID string UserID of the user to update the ReadStatus for.
      * @param $issueID string IssueID of the issue to update the ReadStatus for.
-     * @param $dataset array Dataset containing the new IsRead (bool) and CurrentPage (int).
+     * @param $dataset array Dataset containing the new IsRead (bool), CurrentPage (int) and Changed (datetime).
      * @return array The new ReadStatus if update successful, else empty array.
      */
     public function setIssueReadStatus($userID, $issueID, $dataset)
@@ -265,11 +265,12 @@ class V1Repo
      * @param $userID string UserID of the user to update the ReadStatus for.
      * @param $volumeID string VolumeID of the volume and issues to update the ReadStatus for.
      * @param $readStatus boolean New ReadStatus. CurrentPage on the issues ReadStatuses will default to 0.
+     * @param $changed Datetime of the change.
      * @return array The new ReadStatus if update successful, else empty array.
      */
-    public function setVolumeReadStatus($userID, $volumeID, $readStatus)
+    public function setVolumeReadStatus($userID, $volumeID, $readStatus, $changed)
     {
-        $this->ReadStatusRepo->updateVolume($volumeID, $userID, $readStatus);
+        $this->ReadStatusRepo->updateVolume($volumeID, $userID, $readStatus, $changed);
         // Will be empty and no rows will have changed if $volumeID was not valid.
         return $this->getVolumeReadStatus($userID, $volumeID);
     }
