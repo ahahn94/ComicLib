@@ -14,7 +14,7 @@ services:
     - ./config/php/:/usr/local/etc/php/
     - ./config/ComicLib/:/var/www/ComicLibConfig/
     - ./config/ImageMagick/policy.xml:/etc/ImageMagick-6/policy.xml # Increase RAM for Image Magick to 2GB.
-    command: bash -c "source /etc/apache2/envvars; apache2 -D FOREGROUND"
+    command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; source /etc/apache2/envvars; apache2 -D FOREGROUND"
   database:
     image: mysql:5.5
 #    Open Port for development.
@@ -27,3 +27,4 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; echo $TZ > /etc/timezone; echo 'default_time_zone=$TZ' >> /etc/mysql/my.cnf; docker-entrypoint.sh mysqld"
