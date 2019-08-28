@@ -298,6 +298,7 @@ class V1Repo
                 "ReadStatus" => array(
                     "IsRead" => $issue["IsRead"],
                     "CurrentPage" => $issue["CurrentPage"],
+                    "Changed" => $issue["Changed"],
                     "Link" => APIGenerics::getAPIPathV1() . "issues/" . $issue["IssueID"] . "/readstatus"
                 ),
                 "Volume" => array(
@@ -332,6 +333,7 @@ class V1Repo
                 "IssueCount" => $volume["IssueCount"],
                 "ReadStatus" => array(
                     "IsRead" => $volume["IsRead"],
+                    "Changed" => $volume["Changed"],
                     "Link" => APIGenerics::getAPIPathV1() . "volumes/" . $volume["VolumeID"] . "/readstatus"
                 ),
                 "Publisher" => array(
