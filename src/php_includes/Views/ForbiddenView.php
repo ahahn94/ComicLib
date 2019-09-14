@@ -10,6 +10,14 @@
 
 ?>
 <html lang="en">
+
+<head>
+    <title>ComicLib</title>
+    <?php
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/PWAHead.html"
+    ?>
+</head>
+
 <header>
     <?php
     /*

@@ -4,3 +4,6 @@ ComicLib is a complete rewrite of ComicDB (https://github.com/ahahn94/ComicDB), 
 This software is still in alpha stage. It contains all features planned for version 1 and passed basic testing (using the included example library).  
 It is currently in extended testing (testing against my private library to find bugs that may not occur when using the example library).  
 This readme will be updated at the time version 1 is released.
+
+#### ComicLib Icon
+The ComicLib icon is based on the archive.svg icon from [FontAwesome](https://fontawesome.com) (CC BY 4.0 License).

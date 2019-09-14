@@ -1,0 +1,21 @@
+{
+
+  "name": "ComicLib",
+
+  "short_name": "ComicLib",
+
+  "start_url": "volumes",
+
+  "display": "standalone",
+
+  "icons": [{
+
+    "src": "resources/images/ComicLib_App_Icon.png",
+
+    "sizes": "512x512",
+
+    "type": "image/png"
+
+  }]
+
+}

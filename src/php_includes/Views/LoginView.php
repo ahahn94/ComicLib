@@ -10,6 +10,14 @@
 
 ?>
 <html lang="en">
+
+<head>
+    <title>ComicLib</title>
+    <?php
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/resources/html/PWAHead.html"
+    ?>
+</head>
+
 <header>
     <?php
     /*
@@ -30,7 +38,9 @@ cover; position: fixed; height: 100%; width: 100%;'>
 
     <div class="text-center text-light" style="min-height: 100%; display: flex; align-items: center">
         <div class="container">
-            <h1 class="display-3"><i class="fas fa-landmark fa-sm"></i> <b>ComicLib</b></h1><br>
+            <h1 class="display-3">
+                <img src="/resources/images/ComicLib_darker.png" style="height: 1.2em; width: auto" alt="">
+                <b>ComicLib</b></h1><br>
             <form class="form-signin" method="post">
                 <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
                 <label for="inputUserName" class="sr-only">User Name</label>
