@@ -92,6 +92,7 @@ Aside from the web-app, ComicLib also exposes a [RESTful API](https://documenter
 
 # Getting started with ComicLib
 - Install `docker` and `docker-compose`. ComicLib uses Docker to run the database- and web-servers as a virtualized environment.
+- Install `python3`. ComicLib uses python for the server manager script. If you want to host ComicLib on Linux, python3 is probably pre-installed.
 - Copy or link your comic directories to src/comics
 - Open config/ComicLib/config.ini and change the following settings:
   - Set safe (and different!) passwords for MYSQL_ROOT_PASSWORD, MYSQL_PASSWORD and AUTH_PASSWORD (which is the password for you web login)
