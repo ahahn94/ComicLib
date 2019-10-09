@@ -46,4 +46,17 @@ class TypeConverters
         return $volume;
     }
 
+    /**
+     * Convert the data types in Publisher to better match the content.
+     * Turns VolumesCount into integer.
+     * Renames VolumesCount to VolumeCount to be consistent with IssueCount in Volumes.
+     * @param array $publisher Publisher as an array.
+     * @return array Modified Publisher
+     */
+    static function publisherConverter(array $publisher): array {
+        $publisher["VolumeCount"] = intval($publisher["VolumesCount"]);
+        unset($publisher["VolumesCount"]);
+        return $publisher;
+    }
+
 }

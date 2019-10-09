@@ -63,6 +63,9 @@ class V1Publishers implements ComicLibAPIResource
                 $publishers = $this->V1Repo->getPublishers();
                 // Prepare answer.
                 $headers = array(APIGenerics::getContentTypeJSON());
+                foreach ($publishers as &$publisher) {
+                    $publisher = TypeConverters::publisherConverter($publisher);
+                }
                 $body = $publishers;
                 // If publishers where found, send 200 - OK, else 404 - Not Found.
                 $responseCode = (!empty($publishers) ? 200 : 404);
@@ -76,6 +79,7 @@ class V1Publishers implements ComicLibAPIResource
                     $publisher = $this->V1Repo->getPublisher($publisherID);
                     // Prepare answer.
                     $headers = array(APIGenerics::getContentTypeJSON());
+                    if (!empty($publisher)) $publisher = TypeConverters::publisherConverter($publisher);
                     $body = $publisher;
                     // If publisher was found, send 200 - OK, else 404 - Not Found.
                     $responseCode = (!empty($publisher) ? 200 : 404);
