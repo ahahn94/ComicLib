@@ -95,6 +95,8 @@ class V1Publishers implements ComicLibAPIResource
                             foreach ($volumes as &$volume) {
                                 // Change the data types of IsRead and CurrentPage.
                                 $volume["ReadStatus"] = TypeConverters::volumeReadStatusConverter($volume["ReadStatus"]);
+                                // Change the data types of IssueCount and StartYear.
+                                $volume = TypeConverters::volumeConverter($volume);
                             }
                             $body = $volumes;
                             // If publishers where found, send 200 - OK, else 404 - Not Found.

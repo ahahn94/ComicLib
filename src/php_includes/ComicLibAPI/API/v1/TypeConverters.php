@@ -34,4 +34,16 @@ class TypeConverters
         return $readStatus;
     }
 
+    /**
+     * Convert the data types in Volume to better match the content.
+     * Turns IssueCount and StartYear into integers.
+     * @param array $volume Volume as an array.
+     * @return array Modified Volume.
+     */
+    static function volumeConverter(array $volume): array {
+        $volume["IssueCount"] = intval($volume["IssueCount"]);
+        $volume["StartYear"] = intval($volume["StartYear"]);
+        return $volume;
+    }
+
 }

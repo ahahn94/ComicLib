@@ -66,6 +66,8 @@ class V1Volumes implements ComicLibAPIResource
                 foreach ($volumes as &$volume) {
                     // Change the data types of IsRead and CurrentPage.
                     $volume["ReadStatus"] = TypeConverters::volumeReadStatusConverter($volume["ReadStatus"]);
+                    // Change the data types of IssueCount and StartYear.
+                    $volume = TypeConverters::volumeConverter($volume);
                 }
                 $body = $volumes;
                 // If volumes where found, send 200 - OK, else 404 - Not Found.
@@ -83,6 +85,7 @@ class V1Volumes implements ComicLibAPIResource
                     if (!empty($volume)){
                         // Change the data types of IsRead and CurrentPage.
                         $volume["ReadStatus"] = TypeConverters::volumeReadStatusConverter($volume["ReadStatus"]);
+                        $volume = TypeConverters::volumeConverter($volume);
                     }
                     $body = $volume;
                     // If volume was found, send 200 - OK, else 404 - Not Found.
