@@ -8,6 +8,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/ComicLib
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Authentication/APIAuthentication.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/APIGenerics.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/v1/V1Repo.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/v1/TypeConverters.php";
 
 /**
  * Class V1Volumes
@@ -62,6 +63,10 @@ class V1Volumes implements ComicLibAPIResource
                 $volumes = $this->V1Repo->getVolumes($user["UserID"]);
                 // Prepare answer.
                 $headers = array(APIGenerics::getContentTypeJSON());
+                foreach ($volumes as &$volume) {
+                    // Change the data types of IsRead and CurrentPage.
+                    $volume["ReadStatus"] = TypeConverters::volumeReadStatusConverter($volume["ReadStatus"]);
+                }
                 $body = $volumes;
                 // If volumes where found, send 200 - OK, else 404 - Not Found.
                 $responseCode = (!empty($volumes) ? 200 : 404);
@@ -75,6 +80,10 @@ class V1Volumes implements ComicLibAPIResource
                     $volume = $this->V1Repo->getVolume($user["UserID"], $volumeID);
                     // Prepare answer.
                     $headers = array(APIGenerics::getContentTypeJSON());
+                    if (!empty($volume)){
+                        // Change the data types of IsRead and CurrentPage.
+                        $volume["ReadStatus"] = TypeConverters::volumeReadStatusConverter($volume["ReadStatus"]);
+                    }
                     $body = $volume;
                     // If volume was found, send 200 - OK, else 404 - Not Found.
                     $responseCode = (!empty($volume) ? 200 : 404);
@@ -91,6 +100,10 @@ class V1Volumes implements ComicLibAPIResource
                             $issues = $this->V1Repo->getVolumeIssues($user["UserID"], $volumeID);
                             // Prepare answer.
                             $headers = array(APIGenerics::getContentTypeJSON());
+                            foreach ($issues as &$issue) {
+                                // Change the data types of IsRead and CurrentPage.
+                                $issue["ReadStatus"] = TypeConverters::issueReadStatusConverter($issue["ReadStatus"]);
+                            }
                             $body = $issues;
                             // If volumes where found, send 200 - OK, else 404 - Not Found.
                             $responseCode = (!empty($issues) ? 200 : 404);
@@ -100,6 +113,9 @@ class V1Volumes implements ComicLibAPIResource
                             $readStatus = $this->V1Repo->getVolumeReadStatus($user["UserID"], $volumeID);
                             // Prepare answer.
                             $headers = array(APIGenerics::getContentTypeJSON());
+                            if (!empty($readStatus)){
+                                $readStatus = TypeConverters::volumeReadStatusConverter($readStatus);
+                            }
                             $body = $readStatus;
                             // If volumes where found, send 200 - OK, else 404 - Not Found.
                             $responseCode = (!empty($readStatus) ? 200 : 404);
@@ -146,17 +162,16 @@ class V1Volumes implements ComicLibAPIResource
                 if ($readStatus !== null) {
                     // Decoding successful. Proceed.
                     // Check if data has valid format.
-                    $isRead = ctype_digit($readStatus["IsRead"]) ? intval($readStatus["IsRead"]) : false;
+                    $isRead = is_bool($readStatus["IsRead"]) ? $readStatus["IsRead"] : null;
                     $changed =
                         (DateTime::createFromFormat("Y-m-d H:i:s", $readStatus["Changed"]) !== false
-                        ) ? true : false;
+                        ) ? $readStatus["Changed"] : null;
 
-                    if ($isRead !== false && $changed) {
+                    if ($isRead !== null && $changed !== null) {
                         // Types seem ok. Proceed.
-                        $isRead = ($isRead === 1) ? true : false;   // Turn int into bool.
-                        $changed = $readStatus["Changed"];
                         // If $volumeID is valid, returns the new ReadStatus, else empty array.
                         $result = $this->V1Repo->setVolumeReadStatus($user["UserID"], $volumeID, $isRead, $changed);
+                        if (!empty($result)) $result = TypeConverters::volumeReadStatusConverter($result);
                         $statusCode = (empty($result)) ? 404 : 200;
                         APIGenerics::sendAnswer(array(APIGenerics::getContentTypeJSON()), $result, $statusCode);
                     } else {

@@ -8,6 +8,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/ComicLib
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Authentication/APIAuthentication.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/APIGenerics.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/v1/V1Repo.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/v1/TypeConverters.php";
 
 /**
  * Class V1Issues
@@ -62,6 +63,10 @@ class V1Issues implements ComicLibAPIResource
                 $issues = $this->V1Repo->getIssues($user["UserID"]);
                 // Prepare answer.
                 $headers = array(APIGenerics::getContentTypeJSON());
+                foreach ($issues as &$issue) {
+                    // Change the data types of IsRead and CurrentPage.
+                    $issue["ReadStatus"] = TypeConverters::issueReadStatusConverter($issue["ReadStatus"]);
+                }
                 $body = $issues;
                 // If issues where found, send 200 - OK, else 404 - Not Found.
                 $responseCode = (!empty($issues) ? 200 : 404);
@@ -75,6 +80,10 @@ class V1Issues implements ComicLibAPIResource
                     $issue = $this->V1Repo->getIssue($user["UserID"], $issueID);
                     // Prepare answer.
                     $headers = array(APIGenerics::getContentTypeJSON());
+                    if (!empty($issue)){
+                        // Change the data types of IsRead and CurrentPage.
+                        $issue["ReadStatus"] = TypeConverters::issueReadStatusConverter($issue["ReadStatus"]);
+                    }
                     $body = $issue;
                     // If issue was found, send 200 - OK, else 404 - Not Found.
                     $responseCode = (!empty($issue) ? 200 : 404);
@@ -94,6 +103,9 @@ class V1Issues implements ComicLibAPIResource
                             $readStatus = $this->V1Repo->getIssueReadStatus($user["UserID"], $issueID);
                             // Prepare answer.
                             $headers = array(APIGenerics::getContentTypeJSON());
+                            if (!empty($readStatus)){
+                                $readStatus = TypeConverters::issueReadStatusConverter($readStatus);
+                            }
                             $body = $readStatus;
                             // If issues where found, send 200 - OK, else 404 - Not Found.
                             $responseCode = (!empty($readStatus) ? 200 : 404);
@@ -140,19 +152,18 @@ class V1Issues implements ComicLibAPIResource
                 if ($readStatus !== null) {
                     // Decoding successful. Proceed.
                     // Check if data has valid format.
-                    $isRead = ctype_digit($readStatus["IsRead"]) ? intval($readStatus["IsRead"]) : false;
-                    $currentPage = ctype_digit($readStatus["CurrentPage"]) ? intval($readStatus["CurrentPage"]) : false;
+                    $isRead = is_bool($readStatus["IsRead"]) ? $readStatus["IsRead"] : null;
+                    $currentPage = is_int($readStatus["CurrentPage"]) ? $readStatus["CurrentPage"] : null;
                     $changed =
                         (DateTime::createFromFormat("Y-m-d H:i:s", $readStatus["Changed"]) !== false
-                        ) ? true : false;
+                        ) ? $readStatus["Changed"] : null;
 
-                    if ($isRead !== false && $currentPage !== false && $changed) {
-                        // Types seem ok. Proceed.
-                        $isRead = ($isRead === 1) ? true : false;   // Turn int into bool.
-                        $changed = $readStatus["Changed"];
+                    if ($isRead !== null && $currentPage !== null && $changed !== null) {
+                        // Types seem to be ok. Proceed.
                         $dataset = array("IsRead" => $isRead, "CurrentPage" => $currentPage, "Changed" => $changed);
                         // If $issueID is valid, returns the new ReadStatus, else empty array.
                         $result = $this->V1Repo->setIssueReadStatus($user["UserID"], $issueID, $dataset);
+                        if (!empty($result)) $result = TypeConverters::issueReadStatusConverter($result);
                         $statusCode = (empty($result)) ? 404 : 200;
                         APIGenerics::sendAnswer(array(APIGenerics::getContentTypeJSON()), $result, $statusCode);
                     } else {

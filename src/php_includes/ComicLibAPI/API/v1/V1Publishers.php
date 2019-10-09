@@ -8,6 +8,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/ComicLib
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/Authentication/APIAuthentication.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/APIGenerics.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/v1/V1Repo.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/php_includes/ComicLibAPI/API/v1/TypeConverters.php";
 
 /**
  * Class V1Publishers
@@ -91,6 +92,10 @@ class V1Publishers implements ComicLibAPIResource
                             $volumes = $this->V1Repo->getPublisherVolumes($user["UserID"], $publisherID);
                             // Prepare answer.
                             $headers = array(APIGenerics::getContentTypeJSON());
+                            foreach ($volumes as &$volume) {
+                                // Change the data types of IsRead and CurrentPage.
+                                $volume["ReadStatus"] = TypeConverters::volumeReadStatusConverter($volume["ReadStatus"]);
+                            }
                             $body = $volumes;
                             // If publishers where found, send 200 - OK, else 404 - Not Found.
                             $responseCode = (!empty($volumes) ? 200 : 404);
