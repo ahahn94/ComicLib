@@ -20,7 +20,7 @@ class APIControllerV1
 
     // List of the available subcontrollers.
     private $APIResources = array("tokens" => "V1Tokens", "issues" => "V1Issues", "publishers" => "V1Publishers",
-        "volumes" => "V1Volumes", "online" => "V1Online");
+        "volumes" => "V1Volumes", "online" => "V1Online", "authenticated" => "V1Authenticated");
 
     /**
      * Controller constructor.
