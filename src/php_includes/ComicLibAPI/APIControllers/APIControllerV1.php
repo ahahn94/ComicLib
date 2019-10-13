@@ -45,6 +45,10 @@ class APIControllerV1
                 // V1Token implements its own authentication.
                 require_once $this->ResourcesPath . "V1Tokens.php";
                 $controller = new V1Tokens($restOfPath, $getParameters, new APIAuthentication());
+            } else if ($controllerName === "online"){
+                // V1Online does not use authentication.
+                require_once $this->ResourcesPath . "V1Online.php";
+                $controller = new V1Online($restOfPath, $getParameters, new APIAuthentication());
             } else {
                 // Check Bearer Token authorization. Will set the $AuthenticatedUser if successful.
                 $APIAuthentication = new APIAuthentication();
