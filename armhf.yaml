@@ -24,4 +24,4 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; echo $TZ > /etc/timezone; echo 'default_time_zone=$TZ' >> /etc/mysql/my.cnf; /entrypoint.sh mysqld"
+    command: bash -c "/entrypoint.sh mysqld"
