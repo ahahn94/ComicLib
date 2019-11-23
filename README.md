@@ -1,13 +1,3 @@
-## Disclaimer
-
-This software is still in alpha stage. It contains all features planned for version 1 and passed basic testing (using the included example library).  
-It is currently in extended testing (testing against my private library to find bugs that may not occur when using the example library).  
-This readme will be updated at the time version 1 is released.
-
-ComicLib is a complete rewrite of ComicDB, adding many new features and a better software architecture and usability.
-
-**The ComicLib API Version 1 may still change. Have a look at the** [API documentation](https://documenter.getpostman.com/view/5715403/S1a35U3H) **if something breaks.**
-
 # ComicLib
 
 ComicLib is a self-hosted personal comics library. It is a web-app, so you can view and download your comics collection on your PC, smartphone or tablet via your preferred internet browser.
@@ -15,9 +5,31 @@ ComicLib can use any digital comic book format. It can extract and display comic
 ComicLib keeps track of which comics you have or have not read, as well as the page you last read (for CBZ, CBR and pdf).
 To provide additional informations around your comics, ComicLib makes use of the ComicVine comics database. You need a ComicVine user account to use ComicLib.
 
-Aside from the web-app, ComicLib also exposes a [RESTful API](https://documenter.getpostman.com/view/5715403/S1a35U3H) for 3rd party apps. 
+Aside from the web-app, ComicLib also exposes a [RESTful API](https://documenter.getpostman.com/view/5715403/S1a35U3H) for 3rd party apps.  
 
-# Screenshots
+The [Coboli comic-reader app](https://github.com/ahahn94/Coboli) uses ComicLib as the server that manages and provides the comics for Coboli.
+
+ComicLib is a complete rewrite of [ComicDB](https://github.com/ahahn94/comicdb), adding many new features and a better software architecture and usability.
+
+## Disclaimer
+
+This software is still in alpha stage. It contains all features planned for version 1 and passed basic testing (using the included example library).
+It is currently in extended testing (testing against my private library to find bugs that may not occur when using the example library).
+This readme will be updated at the time version 1 is released.
+
+**The ComicLib API version 1 may still change, as the development of Coboli may require changes. Have a look at the**
+[API documentation](https://documenter.getpostman.com/view/5715403/S1a35U3H) **if something breaks.
+API version 1 will become stable with the release of ComicLib version 1.0, which will be released alongside Coboli version 1.0.**
+
+### Todo before the release of version 1.0
+- [ ] Upgrade the docker php image to php 7.3
+- [ ] Wait for Coboli 1.0
+
+## Study paper
+The development of the first prototype of ComicLib was part of the study paper that I wrote as the pre-condition to my bachelor's thesis. The study paper is licensed under the terms and conditions of the CC BY 4.0 license to the TH Köln
+and can be [accessed](https://epb.bibl.th-koeln.de/frontdoor/index/index/start/1/rows/10/sortfield/score/sortorder/desc/searchtype/simple/query/Andr%C3%A9+Hahn/docId/1421) via the e-publications server of the TH Köln (german).
+
+## Screenshots
 
 <table>
 <tr>
@@ -90,7 +102,7 @@ Aside from the web-app, ComicLib also exposes a [RESTful API](https://documenter
 </tr>
 </table>
 
-# Getting started with ComicLib
+## Getting started with ComicLib
 - Install `docker` and `docker-compose`. ComicLib uses Docker to run the database- and web-servers as a virtualized environment.
 - Install `python3`. ComicLib uses python for the server manager script. If you want to host ComicLib on Linux, python3 is probably pre-installed.
 - Copy or link your comic directories to src/comics
@@ -102,25 +114,25 @@ Aside from the web-app, ComicLib also exposes a [RESTful API](https://documenter
 
 **Your ComicLib instance will now be accessible via http://127.0.0.1:8081 and https://127.0.0.1:8082 on the computer running ComicLib. Have a look into _Security_ to secure your ComicLib instance.**
 
-## Server Control
+### Server Control
 - start the server by running `manage.py` or `manage.py start`
 - to stop the server just run `manage.py stop`
 
-## Security
+### Security
 ComicLib can be accessed via HTTP on port 8081 and via HTTPS via 8082. If using HTTP, your password is send to the ComicLib server in plain text with no additional encryption. This is very insecure and you should really consider using HTTPS instead.  
 HTTPS is enabled by default, but you will get a certificate warning every time you open ComicLib. To get rid of the warning, you have to request a TLS certificate that matches your domain name.  
 
 **To get a working TLS certificate, run `manage.py setup-le`. This will start Let's Encrypt Certbot, which will guide you through the rest of the process.**
 **To renew your existing certificate, run `manage.py renew-le`.**
 
-## Server Autostart
+### Server Autostart
 If you want to automatically start ComicLib when starting your computer, you can e.g. create a cron job that runs manage.py.
 
-## Comics Organization
+### Comics Organization
 To get familiar with the way ComicLib expects you to organize your comics, please take a look at the included testing 
 data and the ComicVine wiki.
 
-## Supported File Formats
+### Supported File Formats
 ComicLib can handle any file format you throw at it, but only the file formats CBR, CBZ and pdf can be extracted for the reading mode.
 Thus, files of every other format can only be downloaded from ComicLib, but not read in the web-app.
 You can e.g. use ComicLib to store your DRM-protected comics and your DRM-free comics in the same collection to get an overview of your
@@ -129,7 +141,7 @@ whole digital comics collection and which comics you have or have not read yet.
 **PDF files have to be rendered to single pages when first opening them for reading. This takes much longer than opening CBR or CBZ comic files (minutes vs mere seconds).**
 **Consider (batch-)converting your PDF comics to CBR or CBZ before adding them to your ComicLib collection to avoid long loading times when opening one of these comic books.**
 
-# Testing Data
+## Testing Data
 For testing purposes, ComicLib includes dummy files that will match to some comics.
 You can use these files to test if your connection to the API works as intended.
 To prevent these dummies from showing up in your real library after testing, you should delete them 
@@ -137,13 +149,13 @@ from the comics directory and run a database update via the admin dashboard.
 
 The dummy files contain white pages with page numbers 1 to 10 on them, so you can open them in ComicLib to test the reading mode.
 
-# Additional Information
+## Additional Information
 
-## Comicvine API
+### Comicvine API
 ComicLib uses the [Comicvine API](https://comicvine.gamespot.com/api/).
 Cover images and additional information on your comics will be downloaded from there.
 
-## External Libraries
+### External Libraries
 This project makes use of the following libraries (that are not included in PHP):
 - [Bootstrap](https://getbootstrap.com) 
 - [FontAwesome](https://fontawesome.com)
@@ -151,14 +163,14 @@ This project makes use of the following libraries (that are not included in PHP)
 - [Popper.js](https://popper.js.org/)
 - [ImageMagick](https://imagemagick.org/)
 
-## ComicLib Icon
+### ComicLib Icon
 The ComicLib icon is based on the archive.svg icon from [FontAwesome](https://fontawesome.com) (CC BY 4.0 License).
 
-## Legacy Software
+### Legacy Software
 For compatibility reasons to ARMHF, this project uses MySQL 5.5.
 This may change as newer versions become available as docker images for ARMHF.
 
-# Copyright & License
+## Copyright & License
 Copyright (c) 2019 ahahn94.
 
 ComicLib is free software; you can redistribute it and/or
