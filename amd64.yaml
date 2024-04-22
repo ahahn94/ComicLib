@@ -16,7 +16,7 @@ services:
     - ./config/ImageMagick/policy.xml:/etc/ImageMagick-6/policy.xml # Increase RAM for Image Magick to 2GB.
     command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; source /etc/apache2/envvars; apache2 -D FOREGROUND"
   database:
-    image: mysql:5.5
+    image: mysql:latest
 #    Open Port for development.
     ports:
       - "3306:3306"
@@ -27,4 +27,4 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    command: bash -c "docker-entrypoint.sh mysqld"
+    command: bash -c "docker-entrypoint.sh mysqld --log_bin_trust_function_creators=1"

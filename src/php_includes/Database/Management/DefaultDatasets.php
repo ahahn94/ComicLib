@@ -128,7 +128,7 @@ class DefaultDatasets
     private function createDefaultUser()
     {
         // Add default Password, LastLogin and APIKey.
-        $this->DefaultUser["LastLogin"] = "";
+        $this->DefaultUser["LastLogin"] = "1970-01-01 00:00:00";
         $password = WebAuthentication::hashPassword($this->DefaultUserCredentials["HashedPassword"]);
         if (strpos($this->DefaultUser["Name"], ":") !== false) {
             // User name contains a colon (":"), which is not allowed (due to HTTP BASIC AUTH in the API).

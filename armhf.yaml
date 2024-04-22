@@ -19,9 +19,10 @@ services:
     image: hypriot/rpi-mysql:5.5
     volumes:
       - ./mysql-data/:/var/lib/mysql/
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    command: bash -c "/entrypoint.sh mysqld"
+    command: bash -c "docker-entrypoint.sh mysqld --log_bin_trust_function_creators=1"
