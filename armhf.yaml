@@ -16,10 +16,9 @@ services:
     - ./config/ImageMagick/policy.xml:/etc/ImageMagick-6/policy.xml # Increase RAM for Image Magick to 2GB.
     command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; source /etc/apache2/envvars; apache2 -D FOREGROUND"
   database:
-    image: hypriot/rpi-mysql:5.5
+    image: mysql:latest
     volumes:
       - ./mysql-data/:/var/lib/mysql/
-    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
