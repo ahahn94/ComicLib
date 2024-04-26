@@ -2,7 +2,7 @@ CREATE OR REPLACE VIEW VolumeIssueCount AS
 SELECT v.VolumeID, COUNT(DISTINCT i.IssueID) AS IssueCount
 FROM Volumes AS v
          LEFT OUTER JOIN Issues as i ON i.VolumeID = v.VolumeID
-GROUP BY i.VolumeID;
+GROUP BY v.VolumeID;
 
 CREATE OR REPLACE VIEW PublisherVolumes AS
 SELECT p.Name AS PublisherName,
