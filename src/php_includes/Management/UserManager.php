@@ -113,9 +113,10 @@ class UserManager
 
                     // Prepare UserGroupID and check if trying to create admin user.
                     $userGroups = $this->groupsRepo->getAll();
-                    $group = array_shift(array_filter($userGroups, function ($item) use ($userGroupName) {
+                    $filtered = array_filter($userGroups, function ($item) use ($userGroupName) {
                         return strcmp($item["Name"], $userGroupName) == 0;
-                    }));
+                    });
+                    $group = array_shift($filtered);
 
                     if (!isset($group["UserGroupID"])) {
                         // GroupID could not be found. Show error.
@@ -180,9 +181,10 @@ class UserManager
             }
             // Prepare UserGroupID.
             $userGroups = $this->groupsRepo->getAll();
-            $group = array_shift(array_filter($userGroups, function ($item) use ($userGroupName) {
+            $filtered = array_filter($userGroups, function ($item) use ($userGroupName) {
                 return strcmp($item["Name"], $userGroupName) == 0;
-            }));
+            });
+            $group = array_shift($filtered);
 
             if (!isset($group["UserGroupID"])) {
                 // GroupID could not be found. Show error.
