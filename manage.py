@@ -41,9 +41,6 @@ def start():
     :return: None
     """
     print("Starting server...")
-    # Check if server has write access to cache, log and lock files. Fix if not.
-    if not check_permissions():
-        fix_permissions()
     docker_control("start")
 
 
@@ -113,7 +110,7 @@ def help_screen():
     print("Welcome to the ComicLib server manager.")
     print("Use 'manage.py start' to start the containers of the ComicLib server.")
     print("Use 'manage.py stop' to stop the containers of the ComicLib server.")
-    print("Use 'manage.py fix-permissions' to grant writing permission on the necessary files to the web server.")
+    print("Use 'manage.py fix-permissions' to grant the webserver user writing permission on the necessary files.")
     print("Use 'manage.py check-permissions' to check writing permission on the necessary files.")
     print("Use 'manage.py clear-log' to clear the log file src/log.txt.")
     print("Use 'manage.py clear-cache' to clear the comics cache src/cache/comics/ to free up disk space.")
