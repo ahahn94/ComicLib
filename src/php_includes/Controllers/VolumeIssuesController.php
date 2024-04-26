@@ -33,9 +33,9 @@ class VolumeIssuesController implements Controller
         $userID = $_SESSION["User"]["UserID"];
         // Update ReadStatus if requested.
         if (!empty($_POST)) {
-            $issueID = $_POST["IssueID"];
+            $issueID = $_POST["IssueID"]?? "";
             // Turn readstatus into boolean.
-            $readStatus = $_POST["ReadStatus"] === "true" ? true : ($_POST["ReadStatus"] === "false" ? false : "");
+            $readStatus = ($_POST["ReadStatus"]?? "") === "true" ? true : (($_POST["ReadStatus"]?? "") === "false" ? false : "");
             $dataset = array("IsRead" => $readStatus, "CurrentPage" => 0);
             if (!empty($issueID)) {
                 if ($readStatus === true || $readStatus === false) {
@@ -45,7 +45,7 @@ class VolumeIssuesController implements Controller
                 }
             }
             // Redirect to same page to clear POST form data and enable going back inside the browser.
-            header("Location: /" . $_GET["_url"]);
+            header("Location: /" . ($_GET["_url"]?? ""));
             exit();
         }
 

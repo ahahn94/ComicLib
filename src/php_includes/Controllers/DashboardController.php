@@ -34,27 +34,27 @@ class DashboardController implements Controller
         // Handle POST requests.
         if (isset($_POST)) {
             $userManager = new UserManager();
-            $action = $_POST["Action"];
+            $action = $_POST["Action"]?? "";
             switch ($action) {
                 case "ChangePassword":
                     // Handle data from the Change Password form.
-                    $currentPassword = $_POST["CurrentPassword"];
-                    $newPassword = $_POST["NewPassword"];
-                    $newPasswordRepeat = $_POST["NewPasswordRepeat"];
+                    $currentPassword = $_POST["CurrentPassword"]?? "";
+                    $newPassword = $_POST["NewPassword"]?? "";
+                    $newPasswordRepeat = $_POST["NewPasswordRepeat"]?? "";
                     $this->errorMessage = $userManager->changePassword($currentPassword, $newPassword, $newPasswordRepeat);
                     break;
                 case "AddUser":
                     // Handle data from the Add User form.
-                    $name = $_POST["Name"];
-                    $password = $_POST["Password"];
-                    $passwordRepeat = $_POST["PasswordRepeat"];
-                    $userGroupName = $_POST["UserGroupName"];
+                    $name = $_POST["Name"]?? "";
+                    $password = $_POST["Password"]?? "";
+                    $passwordRepeat = $_POST["PasswordRepeat"]?? "";
+                    $userGroupName = $_POST["UserGroupName"]?? "";
                     $this->errorMessage = $userManager->addUser($name, $password, $passwordRepeat, $userGroupName);
                     break;
                 case "ChangeUserGroup":
                     // Handle data from the Change User Group form.
-                    $userID = $_POST["UserID"];
-                    $userGroupName = $_POST["UserGroupName"];
+                    $userID = $_POST["UserID"]?? "";
+                    $userGroupName = $_POST["UserGroupName"]?? "";
                     $this->errorMessage = $userManager->changeUserGroup($userID, $userGroupName);
                     break;
                 case "DeleteUser":

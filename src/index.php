@@ -21,7 +21,7 @@ $Controllers = array("" => "VolumesController", "volumes" => "VolumesController"
 * Dismantle URL into controller name, path and GET parameters.
 */
 
-$url = $_GET["_url"];
+$url = $_GET["_url"]?? "";
 $urlParts = explode("/", $url);
 $controllerName = $urlParts[0];
 $path = array_splice($urlParts, 1);
@@ -39,7 +39,7 @@ if ($controllerName === "api") {
     */
     $webAuthentication = new WebAuthentication();
 
-    if ($_POST["logout"] === "true") {
+    if (($_POST["logout"]?? "") === "true") {
         // Logout button was pressed. Log out.
         $webAuthentication->logOut();
     }

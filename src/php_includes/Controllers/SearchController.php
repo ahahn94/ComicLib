@@ -51,8 +51,8 @@ class SearchController implements Controller
 
         // Update ReadStatus if requested.
         if (!empty($_POST)) {
-            $volumeID = $_POST["VolumeID"];
-            $readStatus = $_POST["ReadStatus"];
+            $volumeID = $_POST["VolumeID"]?? "";
+            $readStatus = $_POST["ReadStatus"]?? "";
             if (!empty($volumeID) && !empty($readStatus)) {
                 if ($readStatus === "true" || $readStatus === "false") {
                     $readStatusRepo = new ReadStatus();
@@ -60,13 +60,13 @@ class SearchController implements Controller
                     $changed = gmdate("Y-m-d H:i:s");
                     $readStatusRepo->updateVolume($volumeID, $userID, $readStatus, $changed);
                     // Redirect to same page to clear POST form data and enable going back inside the browser.
-                    header("Location: /" . $_GET["_url"] . "?searchText=" . urlencode($_GET["searchText"]));
+                    header("Location: /" . ($_GET["_url"]?? "") . "?searchText=" . urlencode($_GET["searchText"]));
                     exit();
                 }
             }
         }
 
-        $searchText = $_GET["searchText"];  // Use GET to enable resending of the search text for pagination.
+        $searchText = $_GET["searchText"]?? "";  // Use GET to enable resending of the search text for pagination.
 
         if (isset($searchText)) {
 

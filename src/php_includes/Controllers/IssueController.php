@@ -52,8 +52,8 @@ class IssueController implements Controller
                 if (!empty($_POST)) {
                     // Received POST form data.
 
-                    $newCurrentPage = $_POST["CurrentPage"];
-                    $newIsRead = $_POST["IsRead"];
+                    $newCurrentPage = $_POST["CurrentPage"]?? "";
+                    $newIsRead = $_POST["IsRead"]?? "";
 
                     // Check if ReadStatus data is set.
                     if (isset($newCurrentPage) && isset($newIsRead)) {
