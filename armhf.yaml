@@ -14,7 +14,7 @@ services:
     - ./config/php/:/usr/local/etc/php/
     - ./config/ComicLib/:/var/www/ComicLibConfig/
     - ./config/ImageMagick/policy.xml:/etc/ImageMagick-6/policy.xml # Increase RAM for Image Magick to 2GB.
-    command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; source /etc/apache2/envvars; apache2 -D FOREGROUND"
+    command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; source /etc/apache2/envvars; php /var/www/html/scripts/startupTasks.php; apache2 -D FOREGROUND"
   database:
     image: mysql:latest
     volumes:

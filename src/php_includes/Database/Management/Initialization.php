@@ -32,9 +32,12 @@ class Initialization
      */
     public static function check()
     {
+        while (($connection = Connection::getInstance()) === null) {
+            sleep(1);
+        }
+
         $tablesNotInitialized = true; // Initialization state of the tables. Assume uninitialized at start.
         $viewsNotInitialized = true; // Initialization state of the views. Assume uninitialized at start.
-        $connection = Connection::getInstance();
         $statement = $connection->prepare("SHOW TABLES FROM ComicLib"); // Grab table metadata.
         try {
             $statement->execute();
