@@ -80,7 +80,8 @@ class DashboardController implements Controller
             $users = $usersRepo->getAll();
             // Add GroupName to each user.
             $userGroups = array();
-            array_walk($userGroupsRepo->getAll(), function ($item) use (&$userGroups) {
+            $allGroups = $userGroupsRepo->getAll();
+            array_walk($allGroups, function ($item) use (&$userGroups) {
                 $userGroups = array_merge($userGroups, array($item["Name"] => $item["UserGroupID"]));
             });
             $userGroups = array_flip($userGroups);

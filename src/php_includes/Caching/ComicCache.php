@@ -145,7 +145,8 @@ class ComicCache
 
         $imageFormats = $this->imageFormats;
         $images = array_filter($files, function ($item) use ($imageFormats) {
-            return in_array(array_pop(explode(".", basename($item))), $imageFormats);
+            $explodedBasename = explode(".", basename($item));
+            return in_array(array_pop($explodedBasename), $imageFormats);
         });
 
         // Turn image names into URIs.
@@ -176,7 +177,8 @@ class ComicCache
          * (Unzip and unrar need .zip and .rar instead of .cbz and .cbr).
          */
 
-        $originalExtension = mb_strtolower(array_pop(explode(".", basename($originalFile))));
+        $explodedBasename = explode(".", basename($originalFile));
+        $originalExtension = mb_strtolower(array_pop($explodedBasename));
         $tempExtension = "";
 
         // Check if extension is acceptable. Else try to convert.
@@ -300,7 +302,8 @@ class ComicCache
      */
     public static function isReadable($filePath)
     {
-        $extension = mb_strtolower(array_pop(explode(".", basename($filePath))));
+        $explodedBasename = explode(".", basename($filePath));
+        $extension = mb_strtolower(array_pop($explodedBasename));
         return in_array($extension, self::$ReadableFileFormats);
     }
 

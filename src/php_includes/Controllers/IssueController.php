@@ -80,7 +80,8 @@ class IssueController implements Controller
 
                 // Check if the file extension of the comic file is pdf. Required to show a warning message that opening
                 // pdfs takes extremely long.
-                $extension = mb_strtolower(array_pop(explode(".", basename($issue["IssueLocalPath"]))));
+                $explodedBasename = explode(".", basename($issue["IssueLocalPath"]));
+                $extension = mb_strtolower(array_pop($explodedBasename));
                 $this->isPDF = ($extension === "pdf") ? true : false;
 
                 // Get caching status. Issue may not be cached or still caching, which will require waiting.

@@ -83,7 +83,8 @@ class ImageCache
     {
         if (!$this->isCached($issue["ImageFileName"])) {
             // Image file is not cached. Add to cache.
-            $extension = array_pop(explode(".", basename($issue["ImageURL"])));
+            $explodedBasename = explode(".", basename($issue["ImageURL"]));
+            $extension = array_pop($explodedBasename);
             $fileName = APIConfiguration::getIssuePrefix() . $issue["IssueID"] . ".$extension";
             Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName is not cached. Adding to cache...");
             $addedSuccessfully = $this->addToCache($fileName, $issue["ImageURL"]);
@@ -105,7 +106,8 @@ class ImageCache
     {
         if (!$this->isCached($publisher["ImageFileName"])) {
             // Image file is not cached. Add to cache.
-            $extension = array_pop(explode(".", basename($publisher["ImageURL"])));
+            $explodedBasename = explode(".", basename($publisher["ImageURL"]));
+            $extension = array_pop($explodedBasename);
             $fileName = APIConfiguration::getPublisherPrefix() . $publisher["PublisherID"] . ".$extension";
             Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName is not cached. Adding to cache...");
             $addedSuccessfully = $this->addToCache($fileName, $publisher["ImageURL"]);
@@ -127,7 +129,8 @@ class ImageCache
     {
         if (!$this->isCached($volume["ImageFileName"])) {
             // Image file is not cached. Add to cache.
-            $extension = array_pop(explode(".", basename($volume["ImageURL"])));
+            $explodedBasename = explode(".", basename($volume["ImageURL"]));
+            $extension = array_pop($explodedBasename);
             $fileName = APIConfiguration::getVolumePrefix() . $volume["VolumeID"] . ".$extension";
             Logging::logInformation(self::$ImageCacheAbsolutePath . "$fileName is not cached. Adding to cache...");
             $addedSuccessfully = $this->addToCache($fileName, $volume["ImageURL"]);

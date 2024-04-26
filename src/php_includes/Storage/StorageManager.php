@@ -443,7 +443,8 @@ class StorageManager
             if (strpos($fileName, self::$IssueNumberDelimiter) !== false) {
                 // File name contains $IssueNumberDelimiter. Try to get the issue number. Should be right after delimiter.
                 $nameOnly = implode(array_slice(explode(".", $fileName), 0, -1));
-                $issueNumber = array_pop(explode(self::$IssueNumberDelimiter, $nameOnly));
+                $explodedName = explode(self::$IssueNumberDelimiter, $nameOnly);
+                $issueNumber = array_pop($explodedName);
                 return array("FileName" => $fileName, "IssueNumber" => $issueNumber);
             } else {
                 // No issue number in filename. Log error and return array with empty issue number.
