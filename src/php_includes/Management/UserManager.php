@@ -135,7 +135,7 @@ class UserManager
                         // Error hashing password. Show error.
                         return "Hashing password failed. User not created.";
                     }
-                    $lastLogin = "";
+                    $lastLogin = "1970-01-01 00:00:00";
                     $apiKey = APIAuthentication::generateAPIKey();
                     $newUser = array("Name" => $name, "HashedPassword" => $passwordHash, "UserGroupID" => $userGroupID,
                         "LastLogin" => $lastLogin, "APIKey" => $apiKey);
